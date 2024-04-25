@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="view_padding4">4dp</dimen>
+    <dimen name="view_padding8">8dp</dimen>
+    <dimen name="view_padding16">16dp</dimen>
+    <dimen name="view_padding24">24dp</dimen>
+    <dimen name="view_padding32">32dp</dimen>
+    <dimen name="view_padding36">36dp</dimen>
+
+    <dimen name="view_loading_dialog">96dp</dimen>
+</resources>

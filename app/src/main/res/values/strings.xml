@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">GFS Mobile</string>
+
+<!--    Labels-->
+    <string name="label_billing">Billing</string>
+    <string name="label_dashboard">Dashboard</string>
+    <string name="label_mill">Mill</string>
+    <string name="label_tractor">Tractor</string>
+    <string name="label_harvester">Harvester</string>
+    <string name="label_invoice">Invoice</string>
+    <string name="label_rice_mill">Rice Mill</string>
+    <string name="label_employee">Employee</string>
+    <string name="label_attendance">Attendance</string>
+    <string name="label_payroll">Payroll</string>
+    <string name="label_inventory">Inventory</string>
+    <string name="label_customer_name">Customer Name</string>
+    <string name="label_rice_weight">Rice Weight</string>
+    <string name="label_60_kilos">60 Kilograms</string>
+    <string name="label_50_kilos">50 Kilograms</string>
+    <string name="label_30_kilos">30 Kilograms</string>
+    <string name="label_25_kilos">25 Kilograms</string>
+    <string name="label_custom_weight">Custom Weight</string>
+    <string name="label_quantity">Quantity</string>
+    <string name="label_kilograms">Kilograms</string>
+    <string name="label_sub_total">Sub-Total</string>
+    <string name="label_total">Total</string>
+    <string name="label_price">Price</string>
+    <string name="label_chaff_weight">Chaff Weigh (Babang)</string>
+    <string name="label_pay">Pay</string>
+    <string name="label_save">Save</string>
+    <string name="label_payment">Payment</string>
+    <string name="label_transaction">Transaction</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_customer_change">Customer Change</string>
+    <string name="label_success">Success</string>
+    <string name="label_failed">Failed</string>
+    <string name="label_warning">Warning</string>
+    <string name="label_continue">Continue</string>
+    <string name="label_close">Close</string>
+    <string name="label_present">Present</string>
+    <string name="label_absent">Absent</string>
+    <string name="label_settings">Settings</string>
+    <string name="label_loan">Loan</string>
+    <string name="label_customer">Customers</string>
+    <string name="label_deductions">Deductions</string>
+    <string name="label_meal_allowance">Meal Allowance</string>
+    <string name="label_diesel">Diesel</string>
+    <string name="label_twenty_percent">%20</string>
+    <string name="label_net_salary">NET Salary</string>
+    <string name="label_Gross_salary">Gross Salary</string>
+    <string name="label_daily_salary">Daily NET Salary</string>
+
+<!--    Sentences-->
+    <string name="sentence_amount_to_pay">Amount to pay</string>
+    <string name="sentence_back_to_billing">Back to Billing</string>
+    <string name="sentence_transaction_save">Transaction Save</string>
+    <string name="sentence_proceed_to_payment">Proceed to Payment</string>
+    <string name="sentence_search_customer">Search Customer</string>
+    <string name="sentence_no_payroll_records_found">No Payroll Records Found.</string>
+</resources>

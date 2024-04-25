@@ -1,0 +1,89 @@
+[versions]
+agp-version = "8.3.2"
+kotlin-version = "1.9.23"
+hilt-version = "2.49"
+jvm-version = "1.9.23"
+coreKtx-version = "1.12.0"
+junit-version = "4.13.2"
+junitVersion-version = "1.1.5"
+espressoCore-version = "3.5.1"
+lifecycleRuntimeKtx-version = "2.7.0"
+activityCompose-version = "1.8.2"
+composeBom-version = "2024.04.00"
+material-version = "1.11.0"
+activity-version = "1.8.2"
+room-runtime-version = "2.6.1"
+sqlite-ktx-version = "2.4.0"
+room-compiler-version = "2.6.1"
+constraintlayout-version = "1.0.1"
+retrofit-version = "2.9.0"
+converter-gson-version = "2.9.0"
+interceptor-version = "4.4.1"
+retrofit-adapter-version = "3.0.0"
+retrofit-kotlin-serialization-version = "1.0.0"
+timber-version = "4.7.1"
+livedata-version = "2.7.0"
+kotlin-serialization-version = "1.5.1"
+navigationCompose-version = "2.7.7"
+hilt-navigation-version = "1.2.0"
+kotlin-kapt-version = "1.5.30"
+uiTextGoogleFonts = "1.6.6"
+datastore-version = "1.0.0"
+kotlinJsonSerialization-version = "1.9.23"
+lottie-version = "6.4.0"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx-version" }
+junit = { group = "junit", name = "junit", version.ref = "junit-version" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion-version" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore-version" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx-version" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose-version" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom-version" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material-version" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity-version" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-version" }
+
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room-runtime-version" }
+androidx-sqlite-ktx = { group = "androidx.sqlite", name = "sqlite-ktx", version.ref = "sqlite-ktx-version" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-compiler-version" }
+
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-version" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-version" }
+hiltcompiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt-navigation-version" }
+
+retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit-version" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson-version" }
+interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "interceptor-version" }
+retrofit-adapter = { group = "com.github.akarnokd", name = "rxjava3-retrofit-adapter", version.ref = "retrofit-adapter-version" }
+retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-kotlin-serialization-version" }
+kotlin-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin-serialization-version" }
+
+timber-logging = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber-version" }
+
+androidx-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "livedata-version" }
+androidx-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "livedata-version" }
+
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose-version" }
+
+androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-version"}
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+
+datastore = { group = "io.github.osipxd", name = "security-crypto-datastore-preferences", version.ref = "datastore-version" }
+
+lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-version" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp-version" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-version" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
+jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jvm-version" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-kapt-version" }
+kotlinJsonSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinJsonSerialization-version" }
