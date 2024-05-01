@@ -268,6 +268,7 @@ fun InputPreview(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
+
         PINIndicator(
             modifier = Modifier
                 .weight(1f),

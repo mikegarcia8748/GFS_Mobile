@@ -1,6 +1,10 @@
 package com.gfs.mobile.system.ui.screen.auth
 
+import com.gfs.mobile.system.data.model.authorizeusers.AuthorizeUsers
+
 data class AuthenticationUiState(
+    val authorizeUsers: List<AuthorizeUsers> = emptyList(),
+    val userName: String = "",
     val userPIN: String = "",
     val hasSixDigit: Boolean = false,
     val firstDigit: Boolean = false,

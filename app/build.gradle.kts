@@ -31,23 +31,48 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+        debug {
+            isDebuggable = true
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     buildFeatures {
+        buildConfig = true
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.12"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    flavorDimensions.add("environment")
+    productFlavors{
+        create("production") {
+            dimension = "environment"
+            resValue("string", "app_name", "GFS Mobile")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.100.3:3000/\"")
+        }
+
+        create("dev") {
+            dimension = "environment"
+            resValue("string", "app_name", "GFS Mobile Dev")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.100.3:3000/\"")
         }
     }
 }

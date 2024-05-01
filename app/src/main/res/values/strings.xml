@@ -49,6 +49,7 @@
     <string name="label_net_salary">NET Salary</string>
     <string name="label_Gross_salary">Gross Salary</string>
     <string name="label_daily_salary">Daily NET Salary</string>
+    <string name="label_select_account">Select Account</string>
 
 <!--    Sentences-->
     <string name="sentence_amount_to_pay">Amount to pay</string>
