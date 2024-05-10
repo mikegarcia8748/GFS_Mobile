@@ -1,7 +1,6 @@
 package com.gfs.mobile.system.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -20,9 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,9 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.gfs.mobile.system.R
 import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
 
@@ -158,6 +156,67 @@ private fun SearchTextFieldPreview() {
             value = stringResource(id = R.string.label_sub_total),
             onValueChanged = { },
             onClickCancel = { }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropDownTextField(
+    userNames: List<String> = emptyList(),
+    onSelectItem: (value: String) -> Unit = { }
+) {
+    var selectedItem by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = it }
+        ) {
+
+            TextField(
+                value = selectedItem,
+                onValueChange = { }
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { }
+            ) {
+
+                repeat(userNames.size) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                text = userNames[it],
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        },
+                        onClick = {
+                            onSelectItem(userNames[it])
+                            selectedItem = userNames[it]
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun DropDownTextFieldPreview() {
+    GFSMaterialTheme {
+        DropDownTextField(
+            userNames = emptyList(),
+            onSelectItem = {}
         )
     }
 }
