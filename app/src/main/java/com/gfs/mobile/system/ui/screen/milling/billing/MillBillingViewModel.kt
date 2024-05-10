@@ -262,7 +262,6 @@ class MillBillingViewModel @Inject constructor(
         val millTransaction = MillTransactionModel(
             chaffWeight = uiState.value.chaffWeight?.toDouble(),
             customerID = "",
-            dateTimeStamp = "",
             deductions = 0.0,
             fiftyKilos = uiState.value.rice50Kilos?.toInt(),
             riceWeight = uiState.value.riceCustomWeight?.toDouble(),
