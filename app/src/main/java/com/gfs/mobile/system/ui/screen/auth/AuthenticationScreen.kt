@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -73,12 +74,22 @@ fun AuthenticationScreen(
 
     AuthenticationContent(
         callback = AuthenticationCallback(
-            onEnterPIN = { viewModel.setUserInput(it.toString()) },
+            onEnterPIN = { viewModel.setUserInput(it) },
             onClickBackSpace = { viewModel.setBackSpaceAction() },
+            onClickSelectAccount = { viewModel.getAuthorizeUsers() },
+            onCancelAccountSelection = { viewModel.accountSelectionCanceled() },
             onSelectAccount = { viewModel.setActiveAccount(it) }
         ),
         uiState = uiState
     )
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.checkPreviousUser()
+        delay(1000)
+        if (uiState.userName.isNullOrEmpty()) {
+            viewModel.getAuthorizeUsers()
+        }
+    }
 
     if (uiState.hasSixDigit) {
         viewModel.authenticateUser()
@@ -108,8 +119,6 @@ private fun AuthenticationContent(
     uiState: AuthenticationUiState
 ) {
 
-    var showAccountSelection by remember { mutableStateOf(false) }
-
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -120,18 +129,15 @@ private fun AuthenticationContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-//            if (uiState.userName.isEmpty()) {
-//                showAccountSelection = true
-//            }
-
-            if (showAccountSelection) {
+            if (uiState.showAccountSelection) {
                 AccountSelection(
                     authorizeUsers = uiState.authorizeUsers,
                     onClickSelectAccount = {
                         callback.onSelectAccount(it)
-                        showAccountSelection = false
                     },
-                    onCloseBottomSheet = { showAccountSelection = false }
+                    onCloseBottomSheet = {
+                        callback.onCancelAccountSelection()
+                    }
                 )
             }
 
@@ -145,9 +151,9 @@ private fun AuthenticationContent(
             Spacer(modifier = Modifier.weight(.1f))
 
             AccountChange(
-                userName = uiState.userName,
+                userName = uiState.userName.orEmpty(),
                 onClickSelectAccount = {
-                    showAccountSelection = true
+                    callback.onClickSelectAccount()
                 }
             )
 
@@ -282,7 +288,7 @@ private fun AccountSelection(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = dimensionResource(id = R.dimen.view_padding8)),
+                    .padding(bottom = dimensionResource(id = R.dimen.view_padding16)),
                 text = stringResource(id = R.string.label_select_account),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.SemiBold,
@@ -291,18 +297,23 @@ private fun AccountSelection(
 
             authorizeUsers.forEach { authorizeUser ->
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onClickSelectAccount(authorizeUser.userName.orEmpty())
-                        }
-                        .padding(vertical = dimensionResource(id = R.dimen.view_padding8)),
-                    textAlign = TextAlign.Center,
-                    text = authorizeUser.userName.orEmpty(),
-                    fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Column {
+
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onClickSelectAccount(authorizeUser.userName.orEmpty())
+                            }
+                            .padding(vertical = dimensionResource(id = R.dimen.view_padding8)),
+                        textAlign = TextAlign.Center,
+                        text = authorizeUser.userName.orEmpty(),
+                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    HorizontalDivider()
+                }
             }
         }
 
@@ -318,6 +329,8 @@ private fun AuthenticationContentPreview() {
             callback = AuthenticationCallback(
                 onEnterPIN = { },
                 onClickBackSpace = { },
+                onClickSelectAccount = { },
+                onCancelAccountSelection = { },
                 onSelectAccount = { }
             ),
             uiState = AuthenticationUiState()

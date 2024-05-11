@@ -22,8 +22,16 @@ class AuthenticationViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AuthenticationUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getAuthorizeUsers()
+    fun checkPreviousUser() {
+        viewModelScope.launch {
+            repository.getPreviousUser().collect { value ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        userName = value.data.orEmpty()
+                    )
+                }
+            }
+        }
     }
 
     fun setUserInput(value: String) {
@@ -46,7 +54,16 @@ class AuthenticationViewModel @Inject constructor(
     fun setActiveAccount(value: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                userName = value
+                userName = value,
+                showAccountSelection = false
+            )
+        }
+    }
+
+    fun accountSelectionCanceled() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                showAccountSelection = false
             )
         }
     }
@@ -62,7 +79,7 @@ class AuthenticationViewModel @Inject constructor(
     fun authenticateUser() {
         viewModelScope.launch {
             repository.authenticateMPIN(
-                userName = uiState.value.userName,
+                userName = uiState.value.userName.orEmpty(),
                 mpin = uiState.value.userPIN
             ).collect { response ->
                 when (response) {
@@ -75,11 +92,23 @@ class AuthenticationViewModel @Inject constructor(
                                      repository.saveAuthenticationToken(it).collect { result ->
                                          when (result) {
                                              is PreferenceResource.Success -> {
-                                                 Timber.d("Preferences saved!")
+                                                 Timber.d("Authentication info saved!")
                                              }
 
                                              else -> {
-                                                 Timber.d("Failed to save preferences...")
+                                                 Timber.d("Failed to save authentication info...")
+                                             }
+                                         }
+                                     }
+
+                                     repository.savePreviousUsername(it.userName.orEmpty()).collect { result ->
+                                         when (result) {
+                                             is PreferenceResource.Success -> {
+                                                 Timber.d("Previous user saved!")
+                                             }
+
+                                             else -> {
+                                                 Timber.d("Failed to save previous user...")
                                              }
                                          }
                                      }
@@ -127,34 +156,49 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
-    private fun getAuthorizeUsers() {
+    fun getAuthorizeUsers() {
         viewModelScope.launch {
             repository.getAuthorizeUsers().collect { response ->
                 when (response) {
                     is NetworkResource.Success -> {
                         when (response.data?.status) {
                             "success" -> {
-                                Timber.d("Authorize accounts loaded from the server!")
                                 _uiState.update { currentState ->
                                     currentState.copy(
-                                        authorizeUsers = response.data.data.orEmpty()
+                                        showLoadingDialog = false,
+                                        authorizeUsers = response.data.data.orEmpty(),
+                                        showAccountSelection = true
                                     )
                                 }
                             }
 
                             else -> {
-                                Timber.d("An error occurred while loading authorize accounts!")
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false,
+                                        errorMessage = response.data?.message
+                                    )
+                                }
                             }
                         }
                     }
 
                     is NetworkResource.Loading -> {
-                        Timber.d("Loading authorize accounts...")
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = true
+                            )
+                        }
                     }
 
                     else -> {
                         val error = response.error
-                        Timber.d("An error occurred while loading authorize accounts! \nError message: $error")
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = false,
+                                errorMessage = error?.message
+                            )
+                        }
                     }
                 }
             }

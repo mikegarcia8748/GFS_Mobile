@@ -9,8 +9,10 @@ import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKeys
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCacheImpl
-import com.gfs.mobile.system.data.local.preferences.user.AuthenticationCache
-import com.gfs.mobile.system.data.local.preferences.user.AuthenticationCacheImpl
+import com.gfs.mobile.system.data.local.preferences.user.auth.AuthenticationCache
+import com.gfs.mobile.system.data.local.preferences.user.auth.AuthenticationCacheImpl
+import com.gfs.mobile.system.data.local.preferences.user.previoususer.PreviousUserCache
+import com.gfs.mobile.system.data.local.preferences.user.previoususer.PreviousUserCacheImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,5 +63,14 @@ object PreferencesModule {
         json: Json
     ) : AuthenticationCache {
         return AuthenticationCacheImpl (dataStorePreferences, json)
+    }
+
+    @Provides
+    @Singleton
+    fun providePreviousUserCache(
+        dataStorePreferences: DataStore<Preferences>,
+        json: Json
+    ) : PreviousUserCache {
+        return PreviousUserCacheImpl(dataStorePreferences, json)
     }
 }

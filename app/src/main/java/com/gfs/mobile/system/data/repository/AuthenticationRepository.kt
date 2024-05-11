@@ -1,6 +1,7 @@
 package com.gfs.mobile.system.data.repository
 
-import com.gfs.mobile.system.data.local.preferences.user.AuthenticationCache
+import com.gfs.mobile.system.data.local.preferences.user.auth.AuthenticationCache
+import com.gfs.mobile.system.data.local.preferences.user.previoususer.PreviousUserCache
 import com.gfs.mobile.system.data.local.sharedPreferenceResource
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.remote.APIService
@@ -10,7 +11,8 @@ import javax.inject.Inject
 
 class AuthenticationRepository @Inject constructor(
     private val apiService: APIService,
-    private val authenticationCache: AuthenticationCache
+    private val authenticationCache: AuthenticationCache,
+    private val previousUserCache: PreviousUserCache
 ) {
 
     fun getAuthorizeUsers() = networkBoundResource(
@@ -45,6 +47,19 @@ class AuthenticationRepository @Inject constructor(
         parameter = value,
         save = {
             authenticationCache.saveAuthentication(it)
+        }
+    )
+
+    fun savePreviousUsername(
+        value: String
+    ) = sharedPreferenceResource(
+        parameter = value,
+        save = { previousUserCache.savePreviousUser(it) }
+    )
+
+    fun getPreviousUser() = sharedPreferenceResource(
+        fetch = {
+            previousUserCache.getPreviousUser()
         }
     )
 }

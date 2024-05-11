@@ -23,7 +23,6 @@ class DashboardViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repository.getAuthenticationToken().collect { content ->
-                Timber.d("Content value:%s", content.data?.fullName.orEmpty())
                 _uiState.update {  currentState ->
                     currentState.copy(
                         userName = content.data?.fullName.orEmpty()
@@ -32,5 +31,4 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
-
 }
