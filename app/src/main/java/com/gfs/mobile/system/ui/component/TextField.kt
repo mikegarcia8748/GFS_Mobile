@@ -131,6 +131,9 @@ fun SearchTextField(
                 contentDescription = null
             )
         },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done
+        ),
         trailingIcon = {
             if (value.isNotEmpty()) {
                 Text(

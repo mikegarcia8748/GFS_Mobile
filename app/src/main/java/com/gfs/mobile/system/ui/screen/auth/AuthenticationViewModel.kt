@@ -2,6 +2,7 @@ package com.gfs.mobile.system.ui.screen.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gfs.mobile.system.data.interceptor.AuthorizationInterceptor
 import com.gfs.mobile.system.data.local.room.PreferenceResource
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.remote.NetworkResource
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
+    private val authorizationInterceptor: AuthorizationInterceptor,
     private val repository: AuthenticationRepository
 ) : ViewModel() {
 
@@ -92,6 +94,7 @@ class AuthenticationViewModel @Inject constructor(
                                      repository.saveAuthenticationToken(it).collect { result ->
                                          when (result) {
                                              is PreferenceResource.Success -> {
+                                                 authorizationInterceptor.setAccessToken(data.accessToken.orEmpty())
                                                  Timber.d("Authentication info saved!")
                                              }
 

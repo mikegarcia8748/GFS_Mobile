@@ -1,13 +1,19 @@
 package com.gfs.mobile.system.ui.screen.milling.billing
 
+import com.gfs.mobile.system.data.model.customer.CustomerModel
 import java.math.BigDecimal
 
 data class MillBillingUiState(
     val customerName: String = "",
     val isSearching: Boolean = false,
     val searchValue: String = "",
+    val customerList: List<CustomerModel> = emptyList(),
+
+    //
     val ricePricePerKilo: Double = 0.0,
     val riceCustomWeight: String? = null,
+
+    // Mill Billing...
     val rice60Kilos: String? = null,
     val rice50Kilos: String? = null,
     val rice30Kilos: String? = null,
