@@ -305,7 +305,7 @@ private fun AccountSelection(
                             .clickable {
                                 onClickSelectAccount(authorizeUser.userName.orEmpty())
                             }
-                            .padding(vertical = dimensionResource(id = R.dimen.view_padding8)),
+                            .padding(vertical = dimensionResource(id = R.dimen.view_padding16)),
                         textAlign = TextAlign.Center,
                         text = authorizeUser.userName.orEmpty(),
                         fontWeight = FontWeight.SemiBold,

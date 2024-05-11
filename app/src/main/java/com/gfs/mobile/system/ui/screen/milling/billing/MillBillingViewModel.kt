@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
 import com.gfs.mobile.system.data.model.MillTransactionModel
+import com.gfs.mobile.system.data.model.customer.CustomerModel
 import com.gfs.mobile.system.data.remote.NetworkResource
 import com.gfs.mobile.system.data.repository.CustomerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,10 +39,13 @@ class MillBillingViewModel @Inject constructor(
         }
     }
 
-    fun onSetCustomerName(value: String) {
+    fun onSetCustomer(value: CustomerModel) {
         _uiState.update { currentState ->
             currentState.copy(
-                customerName = value
+                customer = value,
+                selectCustomer = false,
+                searchValue = "",
+                customerList = emptyList()
             )
         }
     }
@@ -49,6 +53,7 @@ class MillBillingViewModel @Inject constructor(
     fun onSearchCustomerName(value: String) {
         _uiState.update { currentState ->
             currentState.copy(
+                isSearching = true,
                 searchValue = value
             )
         }
@@ -58,18 +63,18 @@ class MillBillingViewModel @Inject constructor(
         }
     }
 
-    fun onClickSearch() {
+    fun onClickSelectCustomer() {
         _uiState.update { currentState ->
             currentState.copy(
-                isSearching = true
+                selectCustomer = true
             )
         }
     }
 
-    fun onCancelCustomerSearch() {
+    fun onCancelSelectCustomer() {
         _uiState.update { currentState ->
             currentState.copy(
-                isSearching = false,
+                selectCustomer = false,
                 searchValue = ""
             )
         }
@@ -300,13 +305,18 @@ class MillBillingViewModel @Inject constructor(
 
                                 _uiState.update { currentState ->
                                     currentState.copy(
+                                        isSearching = false,
                                         customerList = data.orEmpty()
                                     )
                                 }
                             }
 
                             else -> {
-
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        isSearching = false
+                                    )
+                                }
                             }
                         }
                     }
@@ -316,7 +326,11 @@ class MillBillingViewModel @Inject constructor(
                     }
 
                     else -> {
-
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isSearching = false
+                            )
+                        }
                     }
                 }
             }

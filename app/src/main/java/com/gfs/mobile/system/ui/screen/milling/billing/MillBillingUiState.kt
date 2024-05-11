@@ -4,7 +4,8 @@ import com.gfs.mobile.system.data.model.customer.CustomerModel
 import java.math.BigDecimal
 
 data class MillBillingUiState(
-    val customerName: String = "",
+    val customer: CustomerModel? = null,
+    val selectCustomer: Boolean = false,
     val isSearching: Boolean = false,
     val searchValue: String = "",
     val customerList: List<CustomerModel> = emptyList(),

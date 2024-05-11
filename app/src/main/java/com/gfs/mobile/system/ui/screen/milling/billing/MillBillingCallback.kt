@@ -1,8 +1,10 @@
 package com.gfs.mobile.system.ui.screen.milling.billing
 
+import com.gfs.mobile.system.data.model.customer.CustomerModel
+
 data class MillBillingCallback(
     val onBackPressed: () -> Unit,
-    val onEnterCustomerName: (value: String) -> Unit,
+    val onSelectCustomer: (customer: CustomerModel) -> Unit,
     val onSearchCustomerName: (value: String) -> Unit,
     val onClickSearch: () -> Unit,
     val onCancelCustomerSearch: () -> Unit,
