@@ -59,6 +59,7 @@ fun MillPaymentScreen(
         ResultDialog(
             result = Result.SUCCESS,
             message = stringResource(id = R.string.sentence_transaction_save),
+            buttonText = stringResource(id = R.string.sentence_back_to_billing),
             onClickActionButton = {
                 viewModel.dismissSuccessDialog()
                 navController.popBackStack()

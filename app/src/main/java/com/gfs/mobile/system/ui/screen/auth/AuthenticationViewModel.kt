@@ -51,9 +51,20 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
+    fun dismissErrorDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                errorMessage = null
+            )
+        }
+    }
+
     fun authenticateUser() {
         viewModelScope.launch {
-            repository.getAuthorizeUsers().collect { response ->
+            repository.authenticateMPIN(
+                userName = uiState.value.userName,
+                mpin = uiState.value.userPIN
+            ).collect { response ->
                 when (response) {
                     is Resource.Success -> {
                          when (response.data?.status) {
@@ -70,7 +81,7 @@ class AuthenticationViewModel @Inject constructor(
                                  _uiState.update { currentState ->
                                      currentState.copy(
                                          showLoadingDialog = false,
-                                         hasAuthenticated = true
+                                         errorMessage = response.data?.message.orEmpty()
                                      )
                                  }
                              }
@@ -80,6 +91,7 @@ class AuthenticationViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _uiState.update { currentState ->
                             currentState.copy(
+                                userPIN = "",
                                 hasSixDigit = false,
                                 showLoadingDialog = true
                             )
@@ -90,7 +102,7 @@ class AuthenticationViewModel @Inject constructor(
                         _uiState.update { currentState ->
                             currentState.copy(
                                 showLoadingDialog = false,
-                                hasAuthenticated = true
+                                errorMessage = response.error?.message.orEmpty()
                             )
                         }
                     }

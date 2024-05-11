@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -72,11 +73,18 @@ private fun LoadingDialogPreview() {
 fun ResultDialog(
     result: Result,
     message: String,
+    buttonText: String,
     onClickActionButton: () -> Unit
 ) {
 
     var displayDialog by remember { mutableStateOf(false) }
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.anim_success))
+    val composition by rememberLottieComposition(spec =
+//        if (result == Result.SUCCESS)
+//            LottieCompositionSpec.RawRes(R.raw.anim_success)
+//        else
+//            LottieCompositionSpec.RawRes(R.raw.anim_failed)
+        LottieCompositionSpec.RawRes(R.raw.anim_failed)
+    )
     val progress by animateLottieCompositionAsState(composition = composition)
 
     LaunchedEffect(key1 = Unit) {
@@ -104,7 +112,8 @@ fun ResultDialog(
             ) {
 
                 LottieAnimation(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .size(dimensionResource(id = R.dimen.view_result_dialog)),
                     composition = composition,
                     progress = { progress }
                 )
@@ -120,6 +129,7 @@ fun ResultDialog(
                     modifier = Modifier
                         .padding(top = dimensionResource(id = R.dimen.view_padding16)),
                     text = message,
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Normal
                 )
@@ -128,7 +138,7 @@ fun ResultDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = dimensionResource(id = R.dimen.view_padding16)),
-                    text = stringResource(id = R.string.sentence_back_to_billing),
+                    text = buttonText,
                     onClick = { onClickActionButton() }
                 )
             }
@@ -143,6 +153,7 @@ private fun MillPaymentDialogPreview() {
         ResultDialog(
             result = Result.SUCCESS,
             message = stringResource(id = R.string.sentence_transaction_save),
+            buttonText = stringResource(id = R.string.sentence_back_to_billing),
             onClickActionButton = { }
         )
     }

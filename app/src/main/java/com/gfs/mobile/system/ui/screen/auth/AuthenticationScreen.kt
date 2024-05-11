@@ -21,10 +21,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,9 +42,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +58,8 @@ import com.gfs.mobile.system.navigation.DashboardScreen
 import com.gfs.mobile.system.ui.component.InputPreview
 import com.gfs.mobile.system.ui.component.LoadingDialog
 import com.gfs.mobile.system.ui.component.NumPad
+import com.gfs.mobile.system.ui.component.Result
+import com.gfs.mobile.system.ui.component.ResultDialog
 import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
 import kotlinx.coroutines.delay
 
@@ -81,6 +91,15 @@ fun AuthenticationScreen(
     if (uiState.hasAuthenticated) {
         navController.navigate(DashboardScreen.Dashboard.route)
     }
+
+    if (!uiState.errorMessage.isNullOrEmpty()) {
+        ResultDialog(
+            result = Result.FAILED,
+            message = uiState.errorMessage.orEmpty(),
+            buttonText = stringResource(id = R.string.label_close),
+            onClickActionButton = { viewModel.dismissErrorDialog() }
+        )
+    }
 }
 
 @Composable
@@ -91,18 +110,6 @@ private fun AuthenticationContent(
 
     var showAccountSelection by remember { mutableStateOf(false) }
 
-    if (uiState.userName.isEmpty()) {
-        showAccountSelection = true
-    }
-
-    if (showAccountSelection) {
-        AccountSelection(
-            authorizeUsers = uiState.authorizeUsers,
-            onClickSelectAccount = { callback.onSelectAccount(it) },
-            onCloseBottomSheet = { showAccountSelection = false }
-        )
-    }
-
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -112,6 +119,21 @@ private fun AuthenticationContent(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+//            if (uiState.userName.isEmpty()) {
+//                showAccountSelection = true
+//            }
+
+            if (showAccountSelection) {
+                AccountSelection(
+                    authorizeUsers = uiState.authorizeUsers,
+                    onClickSelectAccount = {
+                        callback.onSelectAccount(it)
+                        showAccountSelection = false
+                    },
+                    onCloseBottomSheet = { showAccountSelection = false }
+                )
+            }
 
             Spacer(modifier = Modifier.weight(.3f))
 
@@ -201,23 +223,37 @@ private fun AccountChange(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    Text(
+                    OutlinedTextField(
                         modifier = Modifier
-                            .weight(1f),
-                        text = userName,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.background
+                            .fillMaxWidth(),
+                        value = userName,
+                        onValueChange = { },
+                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                        enabled = false,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledBorderColor = Color.Transparent,
+                            disabledTextColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        shape = RoundedCornerShape(dimensionResource(id = R.dimen.view_padding24)),
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_user),
+                                tint = MaterialTheme.colorScheme.background,
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = { onClickSelectAccount() }
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_swap),
+                                    tint = MaterialTheme.colorScheme.background,
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     )
-
-                    IconButton(
-                        onClick = { onClickSelectAccount() }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_swap),
-                            tint = MaterialTheme.colorScheme.background,
-                            contentDescription = null
-                        )
-                    }
                 }
             }
         }
@@ -227,34 +263,50 @@ private fun AccountChange(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AccountSelection(
-    authorizeUsers: List<AuthorizeUsers> = emptyList(),
-    onClickSelectAccount: (value: String) -> Unit = { },
-    onCloseBottomSheet: () -> Unit = { }
+    authorizeUsers: List<AuthorizeUsers>,
+    onClickSelectAccount: (value: String) -> Unit,
+    onCloseBottomSheet: () -> Unit
 ) {
+
     ModalBottomSheet(
+        sheetState = rememberModalBottomSheetState(),
         onDismissRequest = { onCloseBottomSheet() },
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(vertical = dimensionResource(id = R.dimen.view_padding8))
-                .padding(horizontal = dimensionResource(id = R.dimen.view_padding16)),
-        ) {
-            item {
-                Text(
-                    text = stringResource(id = R.string.label_select_account)
-                )
-            }
 
-            items(authorizeUsers.count()) {
+        Column(
+            modifier = Modifier
+                .padding(bottom = dimensionResource(id = R.dimen.view_padding16))
+                .padding(horizontal = dimensionResource(id = R.dimen.view_padding16))
+        ) {
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = dimensionResource(id = R.dimen.view_padding8)),
+                text = stringResource(id = R.string.label_select_account),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            authorizeUsers.forEach { authorizeUser ->
+
                 Text(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .clickable {
-                            onClickSelectAccount(authorizeUsers[it].userName.orEmpty())
-                        },
-                    text = authorizeUsers[it].userName.orEmpty()
+                            onClickSelectAccount(authorizeUser.userName.orEmpty())
+                        }
+                        .padding(vertical = dimensionResource(id = R.dimen.view_padding8)),
+                    textAlign = TextAlign.Center,
+                    text = authorizeUser.userName.orEmpty(),
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }
+
+        Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.view_padding24)))
     }
 }
 
