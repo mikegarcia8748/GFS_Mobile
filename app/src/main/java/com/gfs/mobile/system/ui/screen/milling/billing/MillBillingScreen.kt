@@ -326,10 +326,10 @@ private fun RiceEntry(
 
         Text(
             modifier = Modifier
-                .weight(.5f),
+                .weight(.3f),
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             textAlign = TextAlign.Center
         )
 

@@ -4,6 +4,7 @@
 <!--    Labels-->
     <string name="label_billing">Billing</string>
     <string name="label_dashboard">Dashboard</string>
+    <string name="label_welcome">Welcome</string>
     <string name="label_mill">Mill</string>
     <string name="label_tractor">Tractor</string>
     <string name="label_harvester">Harvester</string>

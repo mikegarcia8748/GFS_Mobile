@@ -9,6 +9,8 @@ import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKeys
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCacheImpl
+import com.gfs.mobile.system.data.local.preferences.user.AuthenticationCache
+import com.gfs.mobile.system.data.local.preferences.user.AuthenticationCacheImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,5 +52,14 @@ object PreferencesModule {
         json: Json
     ) : MillBillingCache {
         return MillBillingCacheImpl (dataStorePreferences, json)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationTokenCache(
+        dataStorePreferences: DataStore<Preferences>,
+        json: Json
+    ) : AuthenticationCache {
+        return AuthenticationCacheImpl (dataStorePreferences, json)
     }
 }

@@ -1,12 +1,12 @@
 package com.gfs.mobile.system.ui.screen.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gfs.mobile.system.data.remote.Resource
+import com.gfs.mobile.system.data.local.room.PreferenceResource
+import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
+import com.gfs.mobile.system.data.remote.NetworkResource
 import com.gfs.mobile.system.data.repository.AuthenticationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -66,9 +66,25 @@ class AuthenticationViewModel @Inject constructor(
                 mpin = uiState.value.userPIN
             ).collect { response ->
                 when (response) {
-                    is Resource.Success -> {
+                    is NetworkResource.Success -> {
                          when (response.data?.status) {
                              "success" -> {
+
+                                 val data = response.data.data
+                                 data?.let {
+                                     repository.saveAuthenticationToken(it).collect { result ->
+                                         when (result) {
+                                             is PreferenceResource.Success -> {
+                                                 Timber.d("Preferences saved!")
+                                             }
+
+                                             else -> {
+                                                 Timber.d("Failed to save preferences...")
+                                             }
+                                         }
+                                     }
+                                 }
+
                                  _uiState.update { currentState ->
                                      currentState.copy(
                                          showLoadingDialog = false,
@@ -88,7 +104,7 @@ class AuthenticationViewModel @Inject constructor(
                          }
                     }
 
-                    is Resource.Loading -> {
+                    is NetworkResource.Loading -> {
                         _uiState.update { currentState ->
                             currentState.copy(
                                 userPIN = "",
@@ -115,7 +131,7 @@ class AuthenticationViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getAuthorizeUsers().collect { response ->
                 when (response) {
-                    is Resource.Success -> {
+                    is NetworkResource.Success -> {
                         when (response.data?.status) {
                             "success" -> {
                                 Timber.d("Authorize accounts loaded from the server!")
@@ -132,7 +148,7 @@ class AuthenticationViewModel @Inject constructor(
                         }
                     }
 
-                    is Resource.Loading -> {
+                    is NetworkResource.Loading -> {
                         Timber.d("Loading authorize accounts...")
                     }
 
