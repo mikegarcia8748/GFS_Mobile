@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.gfs.mobile.system.data.model.MillTransactionModel
+import com.gfs.mobile.system.data.param.MillTransactionParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -23,13 +24,13 @@ class MillBillingCacheImpl @Inject constructor(
         val millBilling = stringPreferencesKey(name = "mill_billing_cache")
     }
 
-    override suspend fun saveMillBilling(value: MillTransactionModel) {
+    override suspend fun saveMillBilling(value: MillTransactionParams) {
         dataStore.edit { preference ->
             preference[PreferencesKey.millBilling] = json.encodeToString(value)
         }
     }
 
-    override fun getMillBilling(): Flow<MillTransactionModel?> {
+    override fun getMillBilling(): Flow<MillTransactionParams?> {
         return dataStore.data
             .catch { exception ->
                 if (exception is IOException) { emit(emptyPreferences()) }

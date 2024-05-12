@@ -1,9 +1,13 @@
 package com.gfs.mobile.system.ui.screen.milling.billing
 
+import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.model.customer.CustomerModel
+import com.gfs.mobile.system.data.model.price.ChaffPriceModel
+import com.gfs.mobile.system.data.model.price.MillPriceModel
 import java.math.BigDecimal
 
 data class MillBillingUiState(
+    val authorizeUser: AuthenticationMPINModel? = null,
     val customer: CustomerModel? = null,
     val selectCustomer: Boolean = false,
 
@@ -14,7 +18,7 @@ data class MillBillingUiState(
     val errorMessage: String? = null,
 
     //
-    val ricePricePerKilo: Double = 0.0,
+    val ricePricePerKilo: MillPriceModel? = null,
     val riceCustomWeight: String? = null,
 
     // Mill Billing...
@@ -28,7 +32,7 @@ data class MillBillingUiState(
     val rice30KilosPrice: BigDecimal = BigDecimal(0.0),
     val rice25KilosPrice: BigDecimal = BigDecimal(0.0),
     val chaffWeight: String? = null,
-    val chaffPricePerKilo: Double = 0.0,
+    val chaffPricePerKilo: ChaffPriceModel? = null,
     val chaffPrice: BigDecimal = BigDecimal(0.0),
     val billSubTotalAmount: BigDecimal = BigDecimal(0.0),
     val billTotalAmount: BigDecimal = BigDecimal(0.0),

@@ -9,6 +9,7 @@ import com.gfs.mobile.system.data.model.price.MillPriceModel
 import com.gfs.mobile.system.data.param.AddChaffPriceParams
 import com.gfs.mobile.system.data.param.AddCustomerParams
 import com.gfs.mobile.system.data.param.AddMillPriceParams
+import com.gfs.mobile.system.data.param.MillTransactionParams
 import com.gfs.mobile.system.data.remote.param.AuthenticateMPINParams
 import retrofit2.Response
 import retrofit2.http.Body
@@ -55,13 +56,23 @@ interface APIService {
 
     /**
      *
-     * Search Customer
+     * Add Customer
      *
      */
     @POST("/customers/add_customer")
     suspend fun addCustomer(
         @Body param: AddCustomerParams
     ): Response<BaseResponse<CustomerModel>>
+
+    /**
+     *
+     * Search Customer
+     *
+     */
+    @GET("/customers/get_customers/{index}")
+    suspend fun getCustomers(
+        @Path("index") index: Int
+    ): Response<BaseResponse<List<CustomerModel>>>
 
     // endregion Customer
 
@@ -72,7 +83,7 @@ interface APIService {
      * Add Mill Price
      *
      */
-    @POST("/mill/add_price")
+    @POST("/millpricing/add_price")
     suspend fun addMillPrice(
         @Body params: AddMillPriceParams
     ): Response<BaseResponse<MillPriceModel>>
@@ -82,7 +93,7 @@ interface APIService {
      * Get Mill Price
      *
      */
-    @GET("/mill/get_mill_price")
+    @GET("/millpricing/get_mill_price")
     suspend fun getMillPrice(): Response<BaseResponse<List<MillPriceModel>>>
 
     /**
@@ -90,7 +101,7 @@ interface APIService {
      * Add Chaff Price
      *
      */
-    @POST("/chaff/add_price")
+    @POST("/chaffpricing/add_price")
     suspend fun addChaffPrice(
         @Body params: AddChaffPriceParams
     ): Response<BaseResponse<ChaffPriceModel>>
@@ -100,8 +111,22 @@ interface APIService {
      * Get Chaff Price
      *
      */
-    @GET("/mill/get_mill_price")
+    @GET("/chaffpricing/get_chaff_price")
     suspend fun getChaffPrice(): Response<BaseResponse<List<ChaffPriceModel>>>
 
     // endregion Pricing
+
+    // region Mill Transaction
+
+    /**
+     *
+     * Get Chaff Price
+     *
+     */
+    @GET("/milltransaction/save_billing")
+    suspend fun saveMillTransaction(
+        @Body params: MillTransactionParams
+    ): Response<BaseResponse<Unit>>
+
+    // endregion Mill Transaction
 }

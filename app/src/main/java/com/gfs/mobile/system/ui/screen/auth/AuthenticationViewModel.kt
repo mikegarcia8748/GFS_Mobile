@@ -91,30 +91,12 @@ class AuthenticationViewModel @Inject constructor(
 
                                  val data = response.data.data
                                  data?.let {
-                                     repository.saveAuthenticationToken(it).collect { result ->
-                                         when (result) {
-                                             is PreferenceResource.Success -> {
-                                                 authorizationInterceptor.setAccessToken(data.accessToken.orEmpty())
-                                                 Timber.d("Authentication info saved!")
-                                             }
-
-                                             else -> {
-                                                 Timber.d("Failed to save authentication info...")
-                                             }
-                                         }
+                                     repository.saveAuthenticationToken(it).collect {
+                                         authorizationInterceptor.setAccessToken(data.accessToken.orEmpty())
+                                         Timber.d("Authentication info saved!")
                                      }
 
-                                     repository.savePreviousUsername(it.userName.orEmpty()).collect { result ->
-                                         when (result) {
-                                             is PreferenceResource.Success -> {
-                                                 Timber.d("Previous user saved!")
-                                             }
-
-                                             else -> {
-                                                 Timber.d("Failed to save previous user...")
-                                             }
-                                         }
-                                     }
+                                     repository.savePreviousUsername(it.userName.orEmpty()).collect { }
                                  }
 
                                  _uiState.update { currentState ->

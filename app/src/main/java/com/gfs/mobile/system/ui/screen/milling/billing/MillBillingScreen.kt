@@ -201,18 +201,10 @@ private fun CustomerSelect(
     onAddCustomer: (name: String, alias: String) -> Unit,
 ) {
 
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.anim_searching))
-    val progress by animateLottieCompositionAsState(composition = composition)
 
     var showAddCustomer by remember { mutableStateOf(false) }
 
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
-
-    if (customerList.isEmpty()) {
-        LaunchedEffect(key1 = Unit) {
-            focusRequester.requestFocus()
-        }
-    }
 
     if (showAddCustomer) {
         AddCustomerBottomSheet(
@@ -250,6 +242,14 @@ private fun CustomerSelect(
         }
 
         if (customerList.isEmpty()) {
+
+            val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.anim_searching))
+            val progress by animateLottieCompositionAsState(composition = composition)
+
+            LaunchedEffect(key1 = Unit) {
+                focusRequester.requestFocus()
+            }
+
             LottieAnimation(
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen.view_result_dialog)),

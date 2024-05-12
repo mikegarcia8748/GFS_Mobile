@@ -3,6 +3,7 @@ package com.gfs.mobile.system.ui.screen.milling.payment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
+import com.gfs.mobile.system.data.repository.MillTransactionRepository
 import com.gfs.mobile.system.extensions.convertAmountToBigDecimal
 import com.gfs.mobile.system.extensions.formatAmountWithCurrency
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MillPaymentViewModel @Inject constructor(
-    private val millBillingCache: MillBillingCache
+    private val repository: MillTransactionRepository
 ) : ViewModel() {
 
      private val _uiState = MutableStateFlow(MillPaymentUiState())
@@ -27,10 +28,10 @@ class MillPaymentViewModel @Inject constructor(
 
     private fun getTransactionDetail() {
         viewModelScope.launch {
-            millBillingCache.getMillBilling().collect{ value ->
+            repository.getMillBillingCache().collect { value ->
                 _uiState.update { currentState ->
                     currentState.copy(
-                        amountToPay = value?.total?.toBigDecimal()
+                        amountToPay = value.data?.totalAmount?.toBigDecimal()
                     )
                 }
             }

@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.gfs.mobile.system.R
 import com.gfs.mobile.system.extensions.formatAmountWithCurrency
 import com.gfs.mobile.system.extensions.toPhp
+import com.gfs.mobile.system.navigation.DashboardScreen
 import com.gfs.mobile.system.ui.component.NumPad
 import com.gfs.mobile.system.ui.component.OutlineTextField2
 import com.gfs.mobile.system.ui.component.PrimaryButton
@@ -61,7 +62,7 @@ fun MillPaymentScreen(
             buttonText = stringResource(id = R.string.sentence_back_to_billing),
             onClickActionButton = {
                 viewModel.dismissSuccessDialog()
-                navController.popBackStack()
+                navController.popBackStack(DashboardScreen.MillBilling.route, inclusive = false)
             }
         )
     }

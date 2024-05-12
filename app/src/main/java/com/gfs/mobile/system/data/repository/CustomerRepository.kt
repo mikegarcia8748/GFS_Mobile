@@ -9,6 +9,14 @@ class CustomerRepository @Inject constructor(
     private val apiService: APIService,
 ) {
 
+    fun getCustomers(
+        index: Int
+    ) = networkBoundResource(
+        fetch = {
+            apiService.getCustomers(index)
+        }
+    )
+
     fun searchCustomer(
         name: String
     ) = networkBoundResource(
