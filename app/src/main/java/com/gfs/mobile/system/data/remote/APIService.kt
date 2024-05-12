@@ -4,7 +4,9 @@ import com.gfs.mobile.system.base.BaseResponse
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.model.authorizeusers.AuthorizeUsers
 import com.gfs.mobile.system.data.model.customer.CustomerModel
+import com.gfs.mobile.system.data.model.price.ChaffPriceModel
 import com.gfs.mobile.system.data.model.price.MillPriceModel
+import com.gfs.mobile.system.data.param.AddChaffPriceParams
 import com.gfs.mobile.system.data.param.AddCustomerParams
 import com.gfs.mobile.system.data.param.AddMillPriceParams
 import com.gfs.mobile.system.data.remote.param.AuthenticateMPINParams
@@ -77,9 +79,29 @@ interface APIService {
 
     /**
      *
-     * Add Mill Price
+     * Get Mill Price
      *
      */
     @GET("/mill/get_mill_price")
     suspend fun getMillPrice(): Response<BaseResponse<List<MillPriceModel>>>
+
+    /**
+     *
+     * Add Chaff Price
+     *
+     */
+    @POST("/chaff/add_price")
+    suspend fun addChaffPrice(
+        @Body params: AddChaffPriceParams
+    ): Response<BaseResponse<ChaffPriceModel>>
+
+    /**
+     *
+     * Get Chaff Price
+     *
+     */
+    @GET("/mill/get_mill_price")
+    suspend fun getChaffPrice(): Response<BaseResponse<List<ChaffPriceModel>>>
+
+    // endregion Pricing
 }
