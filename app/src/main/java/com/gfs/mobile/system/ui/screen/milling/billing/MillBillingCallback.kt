@@ -8,6 +8,7 @@ data class MillBillingCallback(
     val onSearchCustomerName: (value: String) -> Unit,
     val onClickSearch: () -> Unit,
     val onCancelCustomerSearch: () -> Unit,
+    val onAddCustomer: (name: String, alias: String) -> Unit,
     val onEnterCustomWeight:(value: String) -> Unit,
     val onEnter60Kilos:(value: String) -> Unit,
     val onEnter50Kilos:(value: String) -> Unit,

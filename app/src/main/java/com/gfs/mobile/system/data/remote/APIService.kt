@@ -4,6 +4,7 @@ import com.gfs.mobile.system.base.BaseResponse
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.model.authorizeusers.AuthorizeUsers
 import com.gfs.mobile.system.data.model.customer.CustomerModel
+import com.gfs.mobile.system.data.param.AddCustomerParams
 import com.gfs.mobile.system.data.remote.param.AuthenticateMPINParams
 import retrofit2.Response
 import retrofit2.http.Body
@@ -43,9 +44,18 @@ interface APIService {
      * Search Customer
      *
      */
-
     @GET("/customers/search/{name}")
     suspend fun searchCustomer(
         @Path("name") name: String
     ): Response<BaseResponse<List<CustomerModel>>>
+
+    /**
+     *
+     * Search Customer
+     *
+     */
+    @POST("/customers/add_customer")
+    suspend fun addCustomer(
+        @Body param: AddCustomerParams
+    ): Response<BaseResponse<CustomerModel>>
 }

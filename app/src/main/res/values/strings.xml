@@ -51,6 +51,8 @@
     <string name="label_Gross_salary">Gross Salary</string>
     <string name="label_daily_salary">Daily NET Salary</string>
     <string name="label_select_account">Select Account</string>
+    <string name="label_customer_alias">Customer Alias</string>
+    <string name="label_add_customer">Add Customer</string>
 
 <!--    Sentences-->
     <string name="sentence_amount_to_pay">Amount to pay</string>

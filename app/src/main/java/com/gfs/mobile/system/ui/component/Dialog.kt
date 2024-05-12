@@ -79,11 +79,10 @@ fun ResultDialog(
 
     var displayDialog by remember { mutableStateOf(false) }
     val composition by rememberLottieComposition(spec =
-//        if (result == Result.SUCCESS)
-//            LottieCompositionSpec.RawRes(R.raw.anim_success)
-//        else
-//            LottieCompositionSpec.RawRes(R.raw.anim_failed)
-        LottieCompositionSpec.RawRes(R.raw.anim_failed)
+        if (result == Result.SUCCESS)
+            LottieCompositionSpec.RawRes(R.raw.anim_success)
+        else
+            LottieCompositionSpec.RawRes(R.raw.anim_failed)
     )
     val progress by animateLottieCompositionAsState(composition = composition)
 

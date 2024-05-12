@@ -6,9 +6,12 @@ import java.math.BigDecimal
 data class MillBillingUiState(
     val customer: CustomerModel? = null,
     val selectCustomer: Boolean = false,
+
     val isSearching: Boolean = false,
-    val searchValue: String = "",
     val customerList: List<CustomerModel> = emptyList(),
+    val searchValue: String = "",
+    val showLoadingDialog: Boolean = false,
+    val errorMessage: String? = null,
 
     //
     val ricePricePerKilo: Double = 0.0,

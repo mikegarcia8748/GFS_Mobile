@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
 import com.gfs.mobile.system.data.model.MillTransactionModel
 import com.gfs.mobile.system.data.model.customer.CustomerModel
+import com.gfs.mobile.system.data.param.AddCustomerParams
 import com.gfs.mobile.system.data.remote.NetworkResource
 import com.gfs.mobile.system.data.repository.CustomerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,6 +77,14 @@ class MillBillingViewModel @Inject constructor(
             currentState.copy(
                 selectCustomer = false,
                 searchValue = ""
+            )
+        }
+    }
+
+    fun dismissErrorDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                errorMessage = null
             )
         }
     }
@@ -329,6 +338,64 @@ class MillBillingViewModel @Inject constructor(
                         _uiState.update { currentState ->
                             currentState.copy(
                                 isSearching = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun addCustomer(
+        name: String,
+        alias: String
+    ) {
+        viewModelScope.launch {
+            val customer = AddCustomerParams(
+                name = name,
+                alias = alias
+            )
+            customerRepository.addCustomer(customer).collect { response ->
+                when (response) {
+                    is NetworkResource.Success -> {
+                        when (response.data?.status) {
+                            "success" -> {
+
+                                val data = response.data.data
+
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false,
+                                        customer = data,
+                                        selectCustomer = false
+                                    )
+                                }
+                            }
+
+                            else -> {
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false,
+                                        errorMessage = response.data?.message
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    is NetworkResource.Loading -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = true
+                            )
+                        }
+                    }
+
+                    else -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = false,
+                                errorMessage = response.error?.message
                             )
                         }
                     }
