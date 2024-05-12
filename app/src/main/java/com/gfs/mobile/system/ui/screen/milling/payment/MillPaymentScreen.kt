@@ -35,7 +35,6 @@ import com.gfs.mobile.system.ui.component.Result
 import com.gfs.mobile.system.ui.component.ResultDialog
 import com.gfs.mobile.system.ui.component.Toolbar
 import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun MillPaymentScreen(

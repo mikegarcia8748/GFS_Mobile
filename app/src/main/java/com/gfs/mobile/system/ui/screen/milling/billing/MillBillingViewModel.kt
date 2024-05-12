@@ -8,6 +8,7 @@ import com.gfs.mobile.system.data.model.customer.CustomerModel
 import com.gfs.mobile.system.data.param.AddCustomerParams
 import com.gfs.mobile.system.data.remote.NetworkResource
 import com.gfs.mobile.system.data.repository.CustomerRepository
+import com.gfs.mobile.system.data.repository.MillPriceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MillBillingViewModel @Inject constructor(
     private val millBillingCache: MillBillingCache,
-    private val customerRepository: CustomerRepository
+    private val customerRepository: CustomerRepository,
+    private val millPriceRepository: MillPriceRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MillBillingUiState())
@@ -32,11 +34,40 @@ class MillBillingViewModel @Inject constructor(
     }
 
     private fun initializeMillingPrice() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                ricePricePerKilo = 4.5,
-                chaffPricePerKilo = 8.0
-            )
+
+        viewModelScope.launch {
+            millPriceRepository.getMillPrice().collect { response ->
+                when (response) {
+                    is NetworkResource.Success -> {
+
+                        when(response.data?.status) {
+                            "200" -> {
+
+                                val data = response.data.data?.get(0)
+
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        ricePricePerKilo = data?.price?: 0.0,
+                                        chaffPricePerKilo = 8.0
+                                    )
+                                }
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+
+                    is NetworkResource.Loading -> {
+
+                    }
+
+                    else -> {
+
+                    }
+                }
+            }
         }
     }
 

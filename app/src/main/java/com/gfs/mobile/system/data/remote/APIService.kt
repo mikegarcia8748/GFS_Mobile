@@ -4,7 +4,9 @@ import com.gfs.mobile.system.base.BaseResponse
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.model.authorizeusers.AuthorizeUsers
 import com.gfs.mobile.system.data.model.customer.CustomerModel
+import com.gfs.mobile.system.data.model.price.MillPriceModel
 import com.gfs.mobile.system.data.param.AddCustomerParams
+import com.gfs.mobile.system.data.param.AddMillPriceParams
 import com.gfs.mobile.system.data.remote.param.AuthenticateMPINParams
 import retrofit2.Response
 import retrofit2.http.Body
@@ -58,4 +60,26 @@ interface APIService {
     suspend fun addCustomer(
         @Body param: AddCustomerParams
     ): Response<BaseResponse<CustomerModel>>
+
+    // endregion Customer
+
+    // region Pricing
+
+    /**
+     *
+     * Add Mill Price
+     *
+     */
+    @POST("/mill/add_price")
+    suspend fun addMillPrice(
+        @Body params: AddMillPriceParams
+    ): Response<BaseResponse<MillPriceModel>>
+
+    /**
+     *
+     * Add Mill Price
+     *
+     */
+    @GET("/mill/get_mill_price")
+    suspend fun getMillPrice(): Response<BaseResponse<List<MillPriceModel>>>
 }
