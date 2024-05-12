@@ -1,7 +1,6 @@
 package com.gfs.mobile.system.data.repository
 
 import com.gfs.mobile.system.data.local.preferences.pricing.chaff.ChaffPriceCache
-import com.gfs.mobile.system.data.local.sharedPreferenceResource
 import com.gfs.mobile.system.data.model.price.ChaffPriceModel
 import com.gfs.mobile.system.data.param.AddChaffPriceParams
 import com.gfs.mobile.system.data.remote.APIService
@@ -27,16 +26,9 @@ class ChaffPriceRepository @Inject constructor(
         }
     )
 
-    fun getChaffPriceFromCache() = sharedPreferenceResource(
-        fetch = {
-            chaffPriceCache.getChaffPrice()
-        }
-    )
+    fun getChaffPriceFromCache() = chaffPriceCache.getChaffPrice()
 
-    fun saveChaffPriceToCache(
+    suspend fun saveChaffPriceToCache(
         value: ChaffPriceModel
-    ) = sharedPreferenceResource(
-        parameter = value,
-        save = { chaffPriceCache.saveChaffPrice(it) }
-    )
+    ) = chaffPriceCache.saveChaffPrice(value)
 }

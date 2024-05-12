@@ -1,7 +1,6 @@
 package com.gfs.mobile.system.data.repository
 
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
-import com.gfs.mobile.system.data.local.sharedPreferenceResource
 import com.gfs.mobile.system.data.param.MillTransactionParams
 import com.gfs.mobile.system.data.remote.APIService
 import com.gfs.mobile.system.data.remote.networkBoundResource
@@ -20,9 +19,11 @@ class MillTransactionRepository @Inject constructor(
         }
     )
 
-    fun getMillBillingCache() = sharedPreferenceResource(
-        fetch = {
-            millBillingCache.getMillBilling()
-        }
-    )
+    fun getMillBillingCache() = millBillingCache.getMillBilling()
+
+    suspend fun saveMillBillingToCache(
+        value: MillTransactionParams
+    ) = millBillingCache.saveMillBilling(value)
+
+    suspend fun clearMillBillingCache() = millBillingCache.clear()
 }

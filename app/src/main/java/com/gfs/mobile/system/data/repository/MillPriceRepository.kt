@@ -1,7 +1,6 @@
 package com.gfs.mobile.system.data.repository
 
 import com.gfs.mobile.system.data.local.preferences.pricing.mill.MillPriceCache
-import com.gfs.mobile.system.data.local.sharedPreferenceResource
 import com.gfs.mobile.system.data.model.price.MillPriceModel
 import com.gfs.mobile.system.data.param.AddMillPriceParams
 import com.gfs.mobile.system.data.remote.APIService
@@ -27,16 +26,9 @@ class MillPriceRepository @Inject constructor(
         }
     )
 
-    fun saveMillPriceCache(
+    suspend fun saveMillPriceCache(
         value: MillPriceModel
-    ) = sharedPreferenceResource(
-        parameter = value,
-        save = { millPriceCache.saveMillPrice(it) }
-    )
+    ) = millPriceCache.saveMillPrice(value)
 
-    fun getMillPriceFromCache() = sharedPreferenceResource(
-        fetch = {
-            millPriceCache.getMillPrice()
-        }
-    )
+    fun getMillPriceFromCache() = millPriceCache.getMillPrice()
 }

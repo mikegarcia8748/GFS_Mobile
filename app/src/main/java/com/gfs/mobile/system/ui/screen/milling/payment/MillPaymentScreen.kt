@@ -29,6 +29,7 @@ import com.gfs.mobile.system.R
 import com.gfs.mobile.system.extensions.formatAmountWithCurrency
 import com.gfs.mobile.system.extensions.toPhp
 import com.gfs.mobile.system.navigation.DashboardScreen
+import com.gfs.mobile.system.ui.component.LoadingDialog
 import com.gfs.mobile.system.ui.component.NumPad
 import com.gfs.mobile.system.ui.component.OutlineTextField2
 import com.gfs.mobile.system.ui.component.PrimaryButton
@@ -54,6 +55,21 @@ fun MillPaymentScreen(
         ),
         uiState = uiState
     )
+
+    if (uiState.showLoadingDialog) {
+        LoadingDialog()
+    }
+
+    if (uiState.errorMessage.isNotEmpty()) {
+        ResultDialog(
+            result = Result.FAILED,
+            message = uiState.errorMessage,
+            buttonText = stringResource(id = R.string.label_close),
+            onClickActionButton = {
+                viewModel.dismissErrorDialog()
+            }
+        )
+    }
 
     if (uiState.transactionSave) {
         ResultDialog(

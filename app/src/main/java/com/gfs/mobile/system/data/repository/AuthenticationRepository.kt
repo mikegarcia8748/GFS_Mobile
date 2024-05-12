@@ -2,7 +2,6 @@ package com.gfs.mobile.system.data.repository
 
 import com.gfs.mobile.system.data.local.preferences.user.auth.AuthenticationCache
 import com.gfs.mobile.system.data.local.preferences.user.previoususer.PreviousUserCache
-import com.gfs.mobile.system.data.local.sharedPreferenceResource
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.remote.APIService
 import com.gfs.mobile.system.data.remote.networkBoundResource
@@ -35,31 +34,15 @@ class AuthenticationRepository @Inject constructor(
         }
     )
 
-    fun getAuthenticationToken() = sharedPreferenceResource(
-        fetch = {
-            authenticationCache.getAuthenticationCache()
-        }
-    )
+    fun getAuthenticationToken() = authenticationCache.getAuthenticationCache()
 
-    fun saveAuthenticationToken(
+    suspend fun saveAuthenticationToken(
         value: AuthenticationMPINModel
-    ) = sharedPreferenceResource(
-        parameter = value,
-        save = {
-            authenticationCache.saveAuthentication(it)
-        }
-    )
+    ) = authenticationCache.saveAuthentication(value)
 
-    fun savePreviousUsername(
+    suspend fun savePreviousUsername(
         value: String
-    ) = sharedPreferenceResource(
-        parameter = value,
-        save = { previousUserCache.savePreviousUser(it) }
-    )
+    ) = previousUserCache.savePreviousUser(value)
 
-    fun getPreviousUser() = sharedPreferenceResource(
-        fetch = {
-            previousUserCache.getPreviousUser()
-        }
-    )
+    fun getPreviousUser() = previousUserCache.getPreviousUser()
 }

@@ -123,7 +123,7 @@ interface APIService {
      * Get Chaff Price
      *
      */
-    @GET("/milltransaction/save_billing")
+    @POST("/milltransaction/save_billing")
     suspend fun saveMillTransaction(
         @Body params: MillTransactionParams
     ): Response<BaseResponse<Unit>>

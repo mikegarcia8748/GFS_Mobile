@@ -2,10 +2,10 @@ package com.gfs.mobile.system.ui.screen.milling.payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
+import com.gfs.mobile.system.data.param.MillTransactionParams
+import com.gfs.mobile.system.data.remote.NetworkResource
 import com.gfs.mobile.system.data.repository.MillTransactionRepository
 import com.gfs.mobile.system.extensions.convertAmountToBigDecimal
-import com.gfs.mobile.system.extensions.formatAmountWithCurrency
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +31,8 @@ class MillPaymentViewModel @Inject constructor(
             repository.getMillBillingCache().collect { value ->
                 _uiState.update { currentState ->
                     currentState.copy(
-                        amountToPay = value.data?.totalAmount?.toBigDecimal()
+                        millTransactionParams = value,
+                        amountToPay = value?.totalAmount?.toBigDecimal()
                     )
                 }
             }
@@ -76,23 +77,102 @@ class MillPaymentViewModel @Inject constructor(
         val amountChange = amountPaid.minus(billAmount?: BigDecimal(0.0))
         _uiState.update { currentState ->
             currentState.copy(
-                amountChange = amountChange
+                amountChange = amountChange,
+                balance = BigDecimal(0.0)
             )
+        }
+
+        val negativeNumber = amountChange < BigDecimal.ZERO
+
+        if (negativeNumber) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    balance = amountChange.abs()
+                )
+            }
         }
     }
 
     fun saveTransaction() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                transactionSave = true
+        viewModelScope.launch {
+            val millTransactionParams = uiState.value.millTransactionParams
+
+            val params = MillTransactionParams(
+                chaffWeight = millTransactionParams?.chaffWeight,
+                chaffPrice = millTransactionParams?.chaffPrice,
+                millPrice = millTransactionParams?.millPrice,
+                customerID = millTransactionParams?.customerID,
+                deductions = millTransactionParams?.deductions,
+                fiftyKgs = millTransactionParams?.fiftyKgs,
+                riceWeight = millTransactionParams?.riceWeight,
+                sixtyKgs = millTransactionParams?.sixtyKgs,
+                subTotal = millTransactionParams?.subTotal,
+                thirtyKgs = millTransactionParams?.thirtyKgs,
+                totalAmount = millTransactionParams?.totalAmount,
+                twentyFiveKgs = millTransactionParams?.twentyFiveKgs,
+                entryBy = millTransactionParams?.entryBy,
+                amountPaid = uiState.value.amountPaid.toDouble(),
+                balance = uiState.value.balance?.toDouble()
             )
+
+            repository.saveMillTransaction(params = params).collect { response ->
+                when (response) {
+                    is NetworkResource.Success -> {
+                        when (response.data?.status) {
+                            "success" -> {
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false,
+                                        transactionSave = true
+                                    )
+                                }
+                            }
+
+                            else -> {
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false,
+                                        errorMessage = response.data?.message.orEmpty()
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    is NetworkResource.Loading -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = true,
+                            )
+                        }
+                    }
+
+                    else -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = false,
+                                errorMessage = response.error?.message.orEmpty()
+                            )
+                        }
+                    }
+                }
+            }
         }
+
     }
     
     fun dismissSuccessDialog() {
         _uiState.update { currentState ->
             currentState.copy(
                 transactionSave = false
+            )
+        }
+    }
+
+    fun dismissErrorDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                errorMessage = ""
             )
         }
     }

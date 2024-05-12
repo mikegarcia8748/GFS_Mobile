@@ -13,6 +13,7 @@ import com.gfs.mobile.system.data.repository.AuthenticationRepository
 import com.gfs.mobile.system.data.repository.ChaffPriceRepository
 import com.gfs.mobile.system.data.repository.CustomerRepository
 import com.gfs.mobile.system.data.repository.MillPriceRepository
+import com.gfs.mobile.system.data.repository.MillTransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MillBillingViewModel @Inject constructor(
-    private val millBillingCache: MillBillingCache,
+    private val millTransactionRepository: MillTransactionRepository,
     private val authenticationRepository: AuthenticationRepository,
     private val chaffPriceRepository: ChaffPriceRepository,
     private val customerRepository: CustomerRepository,
@@ -40,6 +41,7 @@ class MillBillingViewModel @Inject constructor(
         initAuthorizeUser()
         initializeMillingPrice()
         initializeChaffPrice()
+        clearPreviousTransactions()
     }
 
     private fun initAuthorizeUser() {
@@ -47,7 +49,7 @@ class MillBillingViewModel @Inject constructor(
             authenticationRepository.getAuthenticationToken().collect { result ->
                 _uiState.update { currentState ->
                     currentState.copy(
-                        authorizeUser = result.data
+                        authorizeUser = result
                     )
                 }
             }
@@ -125,6 +127,12 @@ class MillBillingViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun clearPreviousTransactions() {
+        viewModelScope.launch {
+            millTransactionRepository.clearMillBillingCache()
         }
     }
 
@@ -388,7 +396,7 @@ class MillBillingViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            millBillingCache.saveMillBilling(millTransaction)
+            millTransactionRepository.saveMillBillingToCache(millTransaction)
         }
     }
 

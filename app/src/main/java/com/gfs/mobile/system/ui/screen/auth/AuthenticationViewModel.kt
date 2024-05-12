@@ -29,7 +29,7 @@ class AuthenticationViewModel @Inject constructor(
             repository.getPreviousUser().collect { value ->
                 _uiState.update { currentState ->
                     currentState.copy(
-                        userName = value.data.orEmpty()
+                        userName = value.orEmpty()
                     )
                 }
             }
@@ -91,12 +91,9 @@ class AuthenticationViewModel @Inject constructor(
 
                                  val data = response.data.data
                                  data?.let {
-                                     repository.saveAuthenticationToken(it).collect {
-                                         authorizationInterceptor.setAccessToken(data.accessToken.orEmpty())
-                                         Timber.d("Authentication info saved!")
-                                     }
-
-                                     repository.savePreviousUsername(it.userName.orEmpty()).collect { }
+                                     repository.saveAuthenticationToken(it)
+                                     authorizationInterceptor.setAccessToken(data.accessToken.orEmpty())
+                                     repository.savePreviousUsername(it.userName.orEmpty())
                                  }
 
                                  _uiState.update { currentState ->

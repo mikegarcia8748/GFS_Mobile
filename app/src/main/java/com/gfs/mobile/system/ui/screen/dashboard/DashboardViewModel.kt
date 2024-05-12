@@ -25,7 +25,7 @@ class DashboardViewModel @Inject constructor(
             repository.getAuthenticationToken().collect { content ->
                 _uiState.update {  currentState ->
                     currentState.copy(
-                        userName = content.data?.fullName.orEmpty()
+                        userName = content?.fullName.orEmpty()
                     )
                 }
             }
