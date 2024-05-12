@@ -1,4 +1,5 @@
 package com.gfs.mobile.system.ui.screen.milling.worker
 
-class MillWorkerCallback {
-}
+data class MillWorkerCallback(
+    val onBackPressed: () -> Unit,
+)

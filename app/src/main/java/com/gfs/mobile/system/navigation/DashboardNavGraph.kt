@@ -11,6 +11,7 @@ import com.gfs.mobile.system.ui.screen.milling.inventory.MillInventoryScreen
 import com.gfs.mobile.system.ui.screen.milling.loan.MillWorkerLoanScreen
 import com.gfs.mobile.system.ui.screen.milling.payment.MillPaymentScreen
 import com.gfs.mobile.system.ui.screen.milling.payroll.MillWorkerPayrollScreen
+import com.gfs.mobile.system.ui.screen.milling.worker.MillWorkerScreen
 import com.gfs.mobile.system.ui.screen.settings.SettingsScreen
 
 fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
@@ -53,6 +54,10 @@ fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
 
     composable(DashboardScreen.MillWorkersLoan.route) {
         MillWorkerLoanScreen(navController = navController)
+    }
+
+    composable(DashboardScreen.MillWorkers.route) {
+        MillWorkerScreen(navController = navController)
     }
 }
 
