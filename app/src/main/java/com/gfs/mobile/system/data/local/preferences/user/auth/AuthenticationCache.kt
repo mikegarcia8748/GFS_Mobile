@@ -1,4 +1,4 @@
-package com.gfs.mobile.system.data.local.preferences.user
+package com.gfs.mobile.system.data.local.preferences.user.auth
 
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import kotlinx.coroutines.flow.Flow

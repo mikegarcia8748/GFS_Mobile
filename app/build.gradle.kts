@@ -121,6 +121,8 @@ dependencies {
     implementation(libs.datastore)
 
     implementation(libs.lottie)
+
+    implementation(libs.shimmer)
 }
 
 // Allow references to generated code

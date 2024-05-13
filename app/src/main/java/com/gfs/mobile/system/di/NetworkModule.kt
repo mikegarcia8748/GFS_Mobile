@@ -56,11 +56,11 @@ object NetworkModule {
     ) : OkHttpClient {
         val client = OkHttpClient.Builder()
             .cache(cache)
-            .connectTimeout(30, TimeUnit.MILLISECONDS)
-            .readTimeout(30, TimeUnit.MILLISECONDS)
-            .writeTimeout(30, TimeUnit.MILLISECONDS)
-            .addNetworkInterceptor(DefaultHeaderInterceptor())
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .addNetworkInterceptor(authorizationInterceptor)
+            .addNetworkInterceptor(DefaultHeaderInterceptor())
             .addInterceptor(loggingInterceptor)
         return client.build()
     }

@@ -1,18 +1,27 @@
 package com.gfs.mobile.system.ui.screen.milling.billing
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,13 +48,18 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.gfs.mobile.system.R
+import com.gfs.mobile.system.data.model.customer.CustomerModel
 import com.gfs.mobile.system.extensions.toPhp
 import com.gfs.mobile.system.navigation.DashboardScreen
+import com.gfs.mobile.system.ui.component.LoadingDialog
 import com.gfs.mobile.system.ui.component.OutlineTextField2
 import com.gfs.mobile.system.ui.component.PrimaryButton
+import com.gfs.mobile.system.ui.component.Result
+import com.gfs.mobile.system.ui.component.ResultDialog
 import com.gfs.mobile.system.ui.component.SearchTextField
 import com.gfs.mobile.system.ui.component.Toolbar
 import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun MillBillingScreen(
@@ -58,17 +72,18 @@ fun MillBillingScreen(
     MillBillingContent(
         callback = MillBillingCallback(
             onBackPressed = {
-                if (uiState.isSearching) {
-                    viewModel.onCancelCustomerSearch()
+                if (uiState.selectCustomer) {
+                    viewModel.onCancelSelectCustomer()
                 } else {
                     navController.popBackStack()
                 }
             },
-            onEnterCustomerName = { viewModel.onSetCustomerName(it) },
-            onClickSearch = { viewModel.onClickSearch()},
-            onSearchCustomerName = { viewModel.onSearchCustomerName(it)},
-            onCancelCustomerSearch = { viewModel.onCancelCustomerSearch()},
-            onEnterCustomWeight = { viewModel.onSetCustomWeight(it)},
+            onSelectCustomer = { viewModel.onSetCustomer(it) },
+            onClickSearch = { viewModel.onClickSelectCustomer() },
+            onSearchCustomerName = { viewModel.onSearchCustomerName(it) },
+            onCancelCustomerSearch = { viewModel.onCancelSelectCustomer() },
+            onAddCustomer = { name, alias -> viewModel.addCustomer(name, alias) },
+            onEnterCustomWeight = { viewModel.onSetCustomWeight(it) },
             onEnter60Kilos = { viewModel.onSet60Kilos(it) },
             onEnter50Kilos = { viewModel.onSet50Kilos(it) },
             onEnter30Kilos = { viewModel.onSet30Kilos(it) },
@@ -81,6 +96,21 @@ fun MillBillingScreen(
         ),
         uiState = uiState
     )
+
+    if (uiState.showLoadingDialog) {
+        LoadingDialog()
+    }
+
+    if (!uiState.errorMessage.isNullOrEmpty()) {
+        ResultDialog(
+            result = Result.FAILED,
+            message = uiState.errorMessage.orEmpty(),
+            buttonText = stringResource(id = R.string.label_close),
+            onClickActionButton = {
+                    viewModel.dismissErrorDialog()
+            }
+        )
+    }
 }
 
 @Composable
@@ -115,15 +145,21 @@ private fun MillBillingContent(
                 )
             }
 
-            if (uiState.isSearching) {
+            if (uiState.selectCustomer) {
 
                 item {
-                    AnimatedVisibility(visible = uiState.isSearching) {
-                        CustomerSearch(
+                    AnimatedVisibility(visible = uiState.selectCustomer) {
+                        CustomerSelect(
                             value = uiState.searchValue,
+                            customerList = uiState.customerList,
+                            isSearching = uiState.isSearching,
                             onValueChange = { callback.onSearchCustomerName(it) },
+                            onCustomerSelected = { callback.onSelectCustomer(it) },
                             onClickCancel = {
                                 callback.onCancelCustomerSearch()
+                            },
+                            onAddCustomer = { name, alias ->
+                                callback.onAddCustomer(name, alias)
                             }
                         )
                     }
@@ -134,7 +170,7 @@ private fun MillBillingContent(
                         modifier = Modifier
                             .padding(top = dimensionResource(id = R.dimen.view_padding16)),
                         hint = stringResource(id = R.string.label_customer_name),
-                        value = uiState.customerName,
+                        value = uiState.customer?.name.orEmpty(),
                         enabled = false,
                         onValueChanged = { },
                         onClick = { callback.onClickSearch() }
@@ -142,7 +178,7 @@ private fun MillBillingContent(
                 }
 
                 item {
-                    AnimatedVisibility(visible = !uiState.isSearching) {
+                    AnimatedVisibility(visible = !uiState.selectCustomer) {
                         MillBillingWeightEntry(
                             callback = callback,
                             uiState = uiState
@@ -155,19 +191,31 @@ private fun MillBillingContent(
 }
 
 @Composable
-private fun CustomerSearch(
-    value: String,
+private fun CustomerSelect(
+    customerList: List<CustomerModel>,
+    isSearching: Boolean,
     onValueChange: (value: String) -> Unit,
-    onClickCancel: () -> Unit
+    value: String,
+    onClickCancel: () -> Unit,
+    onCustomerSelected: (customer: CustomerModel) -> Unit,
+    onAddCustomer: (name: String, alias: String) -> Unit,
 ) {
 
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.anim_searching))
-    val progress by animateLottieCompositionAsState(composition = composition)
+
+    var showAddCustomer by remember { mutableStateOf(false) }
 
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
 
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
+    if (showAddCustomer) {
+        AddCustomerBottomSheet(
+            onAddCustomer = { name, alias ->
+                onAddCustomer(name, alias)
+                showAddCustomer = false
+            },
+            onCancelAddCustomer = {
+                showAddCustomer = false
+            }
+        )
     }
 
     Column(
@@ -185,10 +233,119 @@ private fun CustomerSearch(
             onClickCancel = { onClickCancel() }
         )
 
-        LottieAnimation(
-            composition = composition,
-            progress = { progress }
-        )
+        Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.view_padding8)))
+
+        if (isSearching) {
+            repeat(10) {
+                CustomerLoading()
+            }
+        }
+
+        if (customerList.isEmpty()) {
+
+            val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.anim_searching))
+            val progress by animateLottieCompositionAsState(composition = composition)
+
+            LaunchedEffect(key1 = Unit) {
+                focusRequester.requestFocus()
+            }
+
+            LottieAnimation(
+                modifier = Modifier
+                    .size(dimensionResource(id = R.dimen.view_result_dialog)),
+                composition = composition,
+                progress = { progress }
+            )
+
+            PrimaryButton (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(id = R.dimen.view_padding8)),
+                text = stringResource(id = R.string.label_add_customer),
+                onClick = {
+                    showAddCustomer = true
+                }
+            )
+
+        } else {
+            customerList.forEach { customer ->
+                CustomerItem(
+                    customer = customer,
+                    onClickCustomer = {
+                        onCustomerSelected(it)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddCustomerBottomSheet(
+    onAddCustomer: (name: String, alias: String) -> Unit,
+    onCancelAddCustomer: () -> Unit
+) {
+    ModalBottomSheet(
+        sheetState = rememberModalBottomSheetState(),
+        onDismissRequest = {
+            onCancelAddCustomer()
+        }
+    ) {
+
+        var customerName by remember { mutableStateOf("") }
+        var customerAlias by remember { mutableStateOf("") }
+
+        Column(
+            modifier = Modifier
+                .padding(bottom = dimensionResource(id = R.dimen.view_padding16))
+                .padding(horizontal = dimensionResource(id = R.dimen.view_padding16))
+        ) {
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = dimensionResource(id = R.dimen.view_padding16)),
+                text = stringResource(id = R.string.label_select_account),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            OutlineTextField2(
+                modifier = Modifier,
+                hint = stringResource(id = R.string.label_customer_name),
+                value = customerName,
+                maxLines = 1,
+                imeAction = ImeAction.Next,
+                onValueChanged = {
+                    customerName = it
+                }
+            )
+
+            OutlineTextField2(
+                modifier = Modifier,
+                hint = stringResource(id = R.string.label_customer_alias),
+                value = customerAlias,
+                maxLines = 1,
+                imeAction = ImeAction.Done,
+                onValueChanged = {
+                    customerAlias = it
+                }
+            )
+
+            PrimaryButton (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(id = R.dimen.view_padding8)),
+                text = stringResource(id = R.string.label_add_customer),
+                onClick = {
+                    onAddCustomer(customerName, customerAlias)
+                }
+            )
+
+            Spacer(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.view_padding24)))
+        }
     }
 }
 
@@ -326,10 +483,10 @@ private fun RiceEntry(
 
         Text(
             modifier = Modifier
-                .weight(.5f),
+                .weight(.3f),
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             textAlign = TextAlign.Center
         )
 
@@ -408,7 +565,7 @@ private fun MillBillingContentPreview() {
         MillBillingContent(
             callback = MillBillingCallback(
                 onBackPressed = { },
-                onEnterCustomerName = { },
+                onSelectCustomer = { },
                 onSearchCustomerName = { },
                 onClickSearch = { },
                 onCancelCustomerSearch = { },
@@ -418,7 +575,8 @@ private fun MillBillingContentPreview() {
                 onEnter30Kilos = { },
                 onEnter25Kilos = { },
                 onChaffWeight = { },
-                onClickSaveBilling = { }
+                onClickSaveBilling = { },
+                 onAddCustomer = { name, alias -> }
             ),
             uiState = MillBillingUiState()
         )
@@ -426,25 +584,114 @@ private fun MillBillingContentPreview() {
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun RiceEntryPreview() {
-    GFSMaterialTheme {
-        RiceEntry(
+private fun CustomerItem(
+    customer: CustomerModel,
+    onClickCustomer: (customer: CustomerModel) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = dimensionResource(id = R.dimen.view_padding8))
+            .clickable {
+                onClickCustomer(customer)
+            }
+    ) {
+
+        Text(
             modifier = Modifier,
-            label = stringResource(id = R.string.label_60_kilos),
-            value = "1",
-            hint = stringResource(id = R.string.label_quantity),
-            priceValue = "1000",
-            imeAction = ImeAction.Done,
-            onValueChange = { }
+            text = customer.name.orEmpty(),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Text(
+            modifier = Modifier
+                .padding(top = dimensionResource(id = R.dimen.view_padding4)),
+            text = customer.alias.orEmpty(),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium
         )
     }
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun TotalDisplayPreview() {
-    GFSMaterialTheme {
-        TotalDisplay(label = stringResource(id = R.string.label_sub_total), value = "0.0")
+private fun CustomerLoading() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = dimensionResource(id = R.dimen.view_padding16))
+    ) {
+
+        Row {
+            Box(
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen.view_padding24))
+                    .shimmer()
+                    .background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(dimensionResource(id = R.dimen.view_padding4))
+                    )
+                    .weight(1f)
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .weight(.5f)
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(top = dimensionResource(id = R.dimen.view_padding4))
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen.view_padding16))
+                    .shimmer()
+                    .background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(dimensionResource(id = R.dimen.view_padding4))
+                    )
+                    .weight(.5f)
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+            )
+        }
     }
 }
+
+@Composable
+@Preview(showBackground = true)
+private fun CustomerLoadingPreview() {
+    GFSMaterialTheme {
+        CustomerLoading()
+    }
+}
+
+//@Composable
+//@Preview(showBackground = true)
+//private fun RiceEntryPreview() {
+//    GFSMaterialTheme {
+//        RiceEntry(
+//            modifier = Modifier,
+//            label = stringResource(id = R.string.label_60_kilos),
+//            value = "1",
+//            hint = stringResource(id = R.string.label_quantity),
+//            priceValue = "1000",
+//            imeAction = ImeAction.Done,
+//            onValueChange = { }
+//        )
+//    }
+//}
+
+//@Composable
+//@Preview(showBackground = true)
+//private fun TotalDisplayPreview() {
+//    GFSMaterialTheme {
+//        TotalDisplay(label = stringResource(id = R.string.label_sub_total), value = "0.0")
+//    }
+//}

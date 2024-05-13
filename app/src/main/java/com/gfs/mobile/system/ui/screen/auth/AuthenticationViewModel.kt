@@ -1,12 +1,13 @@
 package com.gfs.mobile.system.ui.screen.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gfs.mobile.system.data.remote.Resource
+import com.gfs.mobile.system.data.interceptor.AuthorizationInterceptor
+import com.gfs.mobile.system.data.local.room.PreferenceResource
+import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
+import com.gfs.mobile.system.data.remote.NetworkResource
 import com.gfs.mobile.system.data.repository.AuthenticationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,14 +17,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
+    private val authorizationInterceptor: AuthorizationInterceptor,
     private val repository: AuthenticationRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthenticationUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        getAuthorizeUsers()
+    fun checkPreviousUser() {
+        viewModelScope.launch {
+            repository.getPreviousUser().collect { value ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        userName = value.orEmpty()
+                    )
+                }
+            }
+        }
     }
 
     fun setUserInput(value: String) {
@@ -46,18 +56,46 @@ class AuthenticationViewModel @Inject constructor(
     fun setActiveAccount(value: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                userName = value
+                userName = value,
+                showAccountSelection = false
+            )
+        }
+    }
+
+    fun accountSelectionCanceled() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                showAccountSelection = false
+            )
+        }
+    }
+
+    fun dismissErrorDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                errorMessage = null
             )
         }
     }
 
     fun authenticateUser() {
         viewModelScope.launch {
-            repository.getAuthorizeUsers().collect { response ->
+            repository.authenticateMPIN(
+                userName = uiState.value.userName.orEmpty(),
+                mpin = uiState.value.userPIN
+            ).collect { response ->
                 when (response) {
-                    is Resource.Success -> {
+                    is NetworkResource.Success -> {
                          when (response.data?.status) {
                              "success" -> {
+
+                                 val data = response.data.data
+                                 data?.let {
+                                     repository.saveAuthenticationToken(it)
+                                     authorizationInterceptor.setAccessToken(data.accessToken.orEmpty())
+                                     repository.savePreviousUsername(it.userName.orEmpty())
+                                 }
+
                                  _uiState.update { currentState ->
                                      currentState.copy(
                                          showLoadingDialog = false,
@@ -70,16 +108,17 @@ class AuthenticationViewModel @Inject constructor(
                                  _uiState.update { currentState ->
                                      currentState.copy(
                                          showLoadingDialog = false,
-                                         hasAuthenticated = true
+                                         errorMessage = response.data?.message.orEmpty()
                                      )
                                  }
                              }
                          }
                     }
 
-                    is Resource.Loading -> {
+                    is NetworkResource.Loading -> {
                         _uiState.update { currentState ->
                             currentState.copy(
+                                userPIN = "",
                                 hasSixDigit = false,
                                 showLoadingDialog = true
                             )
@@ -90,7 +129,7 @@ class AuthenticationViewModel @Inject constructor(
                         _uiState.update { currentState ->
                             currentState.copy(
                                 showLoadingDialog = false,
-                                hasAuthenticated = true
+                                errorMessage = response.error?.message.orEmpty()
                             )
                         }
                     }
@@ -99,34 +138,49 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
-    private fun getAuthorizeUsers() {
+    fun getAuthorizeUsers() {
         viewModelScope.launch {
             repository.getAuthorizeUsers().collect { response ->
                 when (response) {
-                    is Resource.Success -> {
+                    is NetworkResource.Success -> {
                         when (response.data?.status) {
                             "success" -> {
-                                Timber.d("Authorize accounts loaded from the server!")
                                 _uiState.update { currentState ->
                                     currentState.copy(
-                                        authorizeUsers = response.data.data.orEmpty()
+                                        showLoadingDialog = false,
+                                        authorizeUsers = response.data.data.orEmpty(),
+                                        showAccountSelection = true
                                     )
                                 }
                             }
 
                             else -> {
-                                Timber.d("An error occurred while loading authorize accounts!")
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false,
+                                        errorMessage = response.data?.message
+                                    )
+                                }
                             }
                         }
                     }
 
-                    is Resource.Loading -> {
-                        Timber.d("Loading authorize accounts...")
+                    is NetworkResource.Loading -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = true
+                            )
+                        }
                     }
 
                     else -> {
                         val error = response.error
-                        Timber.d("An error occurred while loading authorize accounts! \nError message: $error")
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = false,
+                                errorMessage = error?.message
+                            )
+                        }
                     }
                 }
             }

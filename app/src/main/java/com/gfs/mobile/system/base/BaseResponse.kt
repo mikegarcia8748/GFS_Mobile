@@ -8,7 +8,7 @@ import androidx.annotation.Keep
 @Keep
 @Serializable
 data class BaseResponse<T>(
-    @SerialName("data:")
+    @SerialName("data")
     val data: T? = null,
     @SerialName("message")
     val message: String? = null,

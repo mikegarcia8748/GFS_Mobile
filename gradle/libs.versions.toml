@@ -31,6 +31,7 @@ uiTextGoogleFonts = "1.6.6"
 datastore-version = "1.0.0"
 kotlinJsonSerialization-version = "1.9.23"
 lottie-version = "6.4.0"
+shimmer-version = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx-version" }
@@ -79,6 +80,8 @@ androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text
 datastore = { group = "io.github.osipxd", name = "security-crypto-datastore-preferences", version.ref = "datastore-version" }
 
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-version" }
+
+shimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "shimmer-version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp-version" }

@@ -9,6 +9,14 @@ import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKeys
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCache
 import com.gfs.mobile.system.data.local.preferences.millbilling.MillBillingCacheImpl
+import com.gfs.mobile.system.data.local.preferences.pricing.chaff.ChaffPriceCache
+import com.gfs.mobile.system.data.local.preferences.pricing.chaff.ChaffPriceCacheImpl
+import com.gfs.mobile.system.data.local.preferences.pricing.mill.MillPriceCache
+import com.gfs.mobile.system.data.local.preferences.pricing.mill.MillPriceCacheImpl
+import com.gfs.mobile.system.data.local.preferences.user.auth.AuthenticationCache
+import com.gfs.mobile.system.data.local.preferences.user.auth.AuthenticationCacheImpl
+import com.gfs.mobile.system.data.local.preferences.user.previoususer.PreviousUserCache
+import com.gfs.mobile.system.data.local.preferences.user.previoususer.PreviousUserCacheImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +28,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class PreferencesModule {
+object PreferencesModule {
 
     @Provides
     @Singleton
@@ -50,5 +58,41 @@ class PreferencesModule {
         json: Json
     ) : MillBillingCache {
         return MillBillingCacheImpl (dataStorePreferences, json)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationTokenCache(
+        dataStorePreferences: DataStore<Preferences>,
+        json: Json
+    ) : AuthenticationCache {
+        return AuthenticationCacheImpl (dataStorePreferences, json)
+    }
+
+    @Provides
+    @Singleton
+    fun providePreviousUserCache(
+        dataStorePreferences: DataStore<Preferences>,
+        json: Json
+    ) : PreviousUserCache {
+        return PreviousUserCacheImpl(dataStorePreferences, json)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMillPriceCache(
+        dataStorePreferences: DataStore<Preferences>,
+        json: Json
+    ) : MillPriceCache {
+        return MillPriceCacheImpl(dataStorePreferences, json)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChaffPriceCache(
+        dataStorePreferences: DataStore<Preferences>,
+        json: Json
+    ) : ChaffPriceCache {
+        return ChaffPriceCacheImpl(dataStorePreferences, json)
     }
 }

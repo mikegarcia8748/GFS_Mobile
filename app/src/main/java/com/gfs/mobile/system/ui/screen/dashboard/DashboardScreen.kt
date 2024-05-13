@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -21,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.gfs.mobile.system.R
 import com.gfs.mobile.system.navigation.DashboardScreen
@@ -30,7 +33,10 @@ import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
+    viewModel: DashboardViewModel = hiltViewModel()
 ) {
+
+    val uiState by viewModel.uiState.collectAsState()
 
     DashboardContent(
         callback = DashboardCallback(
@@ -59,7 +65,7 @@ fun DashboardScreen(
                 navController.navigate(DashboardScreen.MillWorkersLoan.route)
             }
         ),
-        uiState = DashboardUiState()
+        uiState = uiState
     )
 }
 
@@ -87,12 +93,21 @@ private fun DashboardContent(
             Text(
                 modifier = Modifier
                     .padding(top = dimensionResource(id = R.dimen.view_padding8)),
-                style = MaterialTheme.typography.titleLarge,
-                text = stringResource(id = R.string.label_dashboard),
+                style = MaterialTheme.typography.bodyLarge,
+                text = stringResource(id = R.string.label_welcome),
                 fontWeight = FontWeight.SemiBold
             )
 
-            Spacer(modifier = Modifier.weight(.2f))
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimensionResource(id = R.dimen.view_padding8)),
+                style = MaterialTheme.typography.titleLarge,
+                text = uiState.userName,
+                fontWeight = FontWeight.Normal
+            )
+
+            Spacer(modifier = Modifier.weight(.25f))
 
             Row(
                 modifier = Modifier

@@ -4,7 +4,8 @@ import com.gfs.mobile.system.data.model.authorizeusers.AuthorizeUsers
 
 data class AuthenticationUiState(
     val authorizeUsers: List<AuthorizeUsers> = emptyList(),
-    val userName: String = "",
+    val userName: String? = null,
+    val showAccountSelection: Boolean = false,
     val userPIN: String = "",
     val hasSixDigit: Boolean = false,
     val firstDigit: Boolean = false,

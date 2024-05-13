@@ -28,6 +28,8 @@ import androidx.navigation.NavHostController
 import com.gfs.mobile.system.R
 import com.gfs.mobile.system.extensions.formatAmountWithCurrency
 import com.gfs.mobile.system.extensions.toPhp
+import com.gfs.mobile.system.navigation.DashboardScreen
+import com.gfs.mobile.system.ui.component.LoadingDialog
 import com.gfs.mobile.system.ui.component.NumPad
 import com.gfs.mobile.system.ui.component.OutlineTextField2
 import com.gfs.mobile.system.ui.component.PrimaryButton
@@ -35,7 +37,6 @@ import com.gfs.mobile.system.ui.component.Result
 import com.gfs.mobile.system.ui.component.ResultDialog
 import com.gfs.mobile.system.ui.component.Toolbar
 import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun MillPaymentScreen(
@@ -55,13 +56,29 @@ fun MillPaymentScreen(
         uiState = uiState
     )
 
+    if (uiState.showLoadingDialog) {
+        LoadingDialog()
+    }
+
+    if (uiState.errorMessage.isNotEmpty()) {
+        ResultDialog(
+            result = Result.FAILED,
+            message = uiState.errorMessage,
+            buttonText = stringResource(id = R.string.label_close),
+            onClickActionButton = {
+                viewModel.dismissErrorDialog()
+            }
+        )
+    }
+
     if (uiState.transactionSave) {
         ResultDialog(
             result = Result.SUCCESS,
             message = stringResource(id = R.string.sentence_transaction_save),
+            buttonText = stringResource(id = R.string.sentence_back_to_billing),
             onClickActionButton = {
                 viewModel.dismissSuccessDialog()
-                navController.popBackStack()
+                navController.popBackStack(DashboardScreen.MillBilling.route, inclusive = false)
             }
         )
     }
