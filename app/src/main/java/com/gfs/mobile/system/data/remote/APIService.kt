@@ -26,7 +26,7 @@ interface APIService {
      * Get Authorize Users...
      *
      */
-    @GET("/account/get_mill_users")
+    @GET("/account/get_authorize_users")
     suspend fun getAuthorizeUsers() : Response<BaseResponse<List<AuthorizeUsers>>>
 
     /**
