@@ -72,7 +72,7 @@ android {
         create("dev") {
             dimension = "environment"
             resValue("string", "app_name", "GFS Mobile Dev")
-            buildConfigField("String", "BASE_URL", "\"http://192.168.100.3:3000/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.93.193:3000/\"")
         }
     }
 }

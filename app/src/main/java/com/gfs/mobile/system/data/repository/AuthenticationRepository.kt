@@ -5,7 +5,7 @@ import com.gfs.mobile.system.data.local.preferences.user.previoususer.PreviousUs
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.remote.APIService
 import com.gfs.mobile.system.data.remote.networkBoundResource
-import com.gfs.mobile.system.data.remote.param.AuthenticateMPINParams
+import com.gfs.mobile.system.data.param.AuthenticateMPINParams
 import javax.inject.Inject
 
 class AuthenticationRepository @Inject constructor(

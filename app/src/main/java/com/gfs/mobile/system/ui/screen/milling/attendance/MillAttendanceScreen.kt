@@ -3,11 +3,13 @@ package com.gfs.mobile.system.ui.screen.milling.attendance
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +37,7 @@ import androidx.navigation.NavHostController
 import com.gfs.mobile.system.R
 import com.gfs.mobile.system.ui.component.Toolbar
 import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun MillAttendanceScreen(
@@ -91,14 +94,32 @@ private fun MillAttendanceContent(
                 )
             }
 
-            item{
-                repeat(5) {
+            if (uiState.loadingWorkers) {
+                item {
+                    repeat(7) {
+                        WorkerShimmer()
+                    }
+                }
+            } else if (uiState.workerList?.isEmpty() == true) {
+                item {
+                    // TODO: Add the lottie animation here...
+                }
+            } else if (!uiState.loadingWorkerError.isNullOrEmpty()) {
+                item {
+                    // TODO: Add the error lottie animation here...
+                }
+            } else {
+                val workerList = uiState.workerList.orEmpty()
+
+                items(workerList.size) {
+                    val worker = workerList[it]
+
                     ItemWorker(
-                        fullName = "Lorem Ipsum",
-                        alias = "Bay",
+                        fullName = worker.fullName.orEmpty(),
+                        alias = worker.userName.orEmpty(),
                         isPresent = false,
                         onClickPresent = { /*TODO*/ },
-                        onClickAbsent = { }
+                        onClickAbsent = { /*TODO*/ }
                     )
                 }
             }
@@ -244,17 +265,43 @@ private fun ItemWorker(
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun MillAttendanceContentPreview() {
-    GFSMaterialTheme {
-        MillAttendanceContent(
-            callback = MillAttendanceCallback(
-                onBackPressed = { },
-                onClickPresent = { },
-                onClickAbsent = { }
-            ),
-            uiState = MillAttendanceUiState()
+private fun WorkerShimmer() {
+    Column(
+        modifier = Modifier
+            .padding(vertical = dimensionResource(id = R.dimen.view_padding4))
+            .padding(horizontal = dimensionResource(id = R.dimen.view_padding8)),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .height(dimensionResource(id = R.dimen.view_padding24))
+                .fillMaxWidth()
+                .shimmer()
+                .background(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.view_padding8))
+                )
         )
+        Box(
+            modifier = Modifier
+                .padding(top = dimensionResource(id = R.dimen.view_padding8))
+                .height(dimensionResource(id = R.dimen.view_padding16))
+                .fillMaxWidth(.0f)
+                .shimmer()
+                .background(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.view_padding8))
+                )
+        )
+
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun WorkerShimmerPreview() {
+    GFSMaterialTheme {
+        WorkerShimmer()
     }
 }
 
@@ -268,6 +315,21 @@ private fun ItemWorkerPreview() {
             isPresent = true,
             onClickPresent = { },
             onClickAbsent = { }
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun MillAttendanceContentPreview() {
+    GFSMaterialTheme {
+        MillAttendanceContent(
+            callback = MillAttendanceCallback(
+                onBackPressed = { },
+                onClickPresent = { },
+                onClickAbsent = { }
+            ),
+            uiState = MillAttendanceUiState()
         )
     }
 }

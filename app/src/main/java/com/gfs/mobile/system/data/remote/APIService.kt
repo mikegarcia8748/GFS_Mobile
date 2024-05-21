@@ -1,6 +1,9 @@
 package com.gfs.mobile.system.data.remote
 
 import com.gfs.mobile.system.base.BaseResponse
+import com.gfs.mobile.system.data.model.AttendanceModel
+import com.gfs.mobile.system.data.model.AttendanceTodayModel
+import com.gfs.mobile.system.data.model.GetEmployeesModel
 import com.gfs.mobile.system.data.model.authentication.AuthenticationMPINModel
 import com.gfs.mobile.system.data.model.authorizeusers.AuthorizeUsers
 import com.gfs.mobile.system.data.model.customer.CustomerModel
@@ -9,8 +12,9 @@ import com.gfs.mobile.system.data.model.price.MillPriceModel
 import com.gfs.mobile.system.data.param.AddChaffPriceParams
 import com.gfs.mobile.system.data.param.AddCustomerParams
 import com.gfs.mobile.system.data.param.AddMillPriceParams
+import com.gfs.mobile.system.data.param.CreateAttendanceParams
 import com.gfs.mobile.system.data.param.MillTransactionParams
-import com.gfs.mobile.system.data.remote.param.AuthenticateMPINParams
+import com.gfs.mobile.system.data.param.AuthenticateMPINParams
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -129,4 +133,51 @@ interface APIService {
     ): Response<BaseResponse<Unit>>
 
     // endregion Mill Transaction
+
+    // region Attendance
+
+    /**
+     *
+     * Get Employee Attendance
+     *
+     */
+    @POST("/attendance/get_attendance/{employeeID}")
+    suspend fun getEmployeeAttendance(
+        @Path("employeeID") id: String
+    ) : Response<BaseResponse<List<AttendanceModel>>>
+
+
+    /**
+     *
+     * Get Employee Attendance
+     *
+     */
+    @POST("/attendance/create_attendance")
+    suspend fun createAttendance(
+        @Body params: CreateAttendanceParams
+    ) : Response<BaseResponse<Unit>>
+
+    // endregion Attendance
+
+    // region Employee
+
+
+    /**
+     *
+     * Get Employee Attendance
+     *
+     */
+    @GET("/workers/get_employees")
+    suspend fun getEmployees() : Response<BaseResponse<List<GetEmployeesModel>>>
+
+    /**
+     *
+     * Get Employee Attendance
+     *
+     */
+    @GET("/attendance/get_attendance_today")
+    suspend fun getAttendanceToday() : Response<BaseResponse<List<AttendanceTodayModel>>>
+
+
+    // endregion Employee
 }
