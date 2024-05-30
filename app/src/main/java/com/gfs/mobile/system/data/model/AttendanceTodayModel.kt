@@ -1,6 +1,5 @@
 package com.gfs.mobile.system.data.model
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
@@ -13,5 +12,7 @@ data class AttendanceTodayModel(
     @SerialName("isPresent")
     val isPresent: Boolean?,
     @SerialName("userName")
-    val userName: String?
+    val userName: String?,
+    @SerialName("workerID")
+    val workerID: String?
 )

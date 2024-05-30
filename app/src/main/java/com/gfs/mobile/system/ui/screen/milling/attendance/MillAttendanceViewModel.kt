@@ -2,6 +2,7 @@ package com.gfs.mobile.system.ui.screen.milling.attendance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gfs.mobile.system.data.local.preferences.user.auth.AuthenticationCache
 import com.gfs.mobile.system.data.param.CreateAttendanceParams
 import com.gfs.mobile.system.data.remote.NetworkResource
 import com.gfs.mobile.system.data.repository.AttendanceRepository
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MillAttendanceViewModel @Inject constructor(
+    private val authorizeUserCache: AuthenticationCache,
     private val repository: AttendanceRepository
 ) : ViewModel() {
 
@@ -21,10 +23,23 @@ class MillAttendanceViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        importWorkers()
+        initiateCurrentUser()
+        getAttendanceToday()
     }
 
-    private fun importWorkers() {
+    private fun initiateCurrentUser() {
+        viewModelScope.launch {
+            authorizeUserCache.getAuthenticationCache().collect { value ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        currentUser = value?.userID.orEmpty()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getAttendanceToday() {
         viewModelScope.launch {
             repository.getAttendanceToday().collect { response ->
                 when (response) {
@@ -77,7 +92,7 @@ class MillAttendanceViewModel @Inject constructor(
     fun tagAsPresent(workerID: String) {
         viewModelScope.launch {
             val params = CreateAttendanceParams(
-                entryBy = "",
+                entryBy = _uiState.value.currentUser,
                 workerID = workerID
             )
             repository.createAttendance(params).collect { response ->
@@ -122,5 +137,59 @@ class MillAttendanceViewModel @Inject constructor(
                 }
             }
         }
+
+        getAttendanceToday()
+    }
+
+    fun tagAsAbsent(workerID: String) {
+        viewModelScope.launch {
+            val params = CreateAttendanceParams(
+                entryBy = _uiState.value.currentUser,
+                workerID = workerID
+            )
+            repository.createAttendance(params).collect { response ->
+                when (response) {
+                    is NetworkResource.Success -> {
+                        when (response.data?.status) {
+                            "success" -> {
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false
+                                    )
+                                }
+                            }
+
+                            else -> {
+                                _uiState.update { currentState ->
+                                    currentState.copy(
+                                        showLoadingDialog = false,
+                                        errorMessage = response.data?.message
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    is NetworkResource.Loading -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = true
+                            )
+                        }
+                    }
+
+                    else -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                showLoadingDialog = false,
+                                errorMessage = response.error?.message
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        getAttendanceToday()
     }
 }

@@ -7,6 +7,8 @@ import com.gfs.mobile.system.ui.screen.dashboard.DashboardScreen
 import com.gfs.mobile.system.ui.screen.milling.attendance.MillAttendanceScreen
 import com.gfs.mobile.system.ui.screen.milling.billing.MillBillingScreen
 import com.gfs.mobile.system.ui.screen.milling.customer.MillCustomerScreen
+import com.gfs.mobile.system.ui.screen.milling.expense.declaration.ExpenseDeclarationScreen
+import com.gfs.mobile.system.ui.screen.milling.expense.list.ExpensesListScreen
 import com.gfs.mobile.system.ui.screen.milling.inventory.MillInventoryScreen
 import com.gfs.mobile.system.ui.screen.milling.loan.MillWorkerLoanScreen
 import com.gfs.mobile.system.ui.screen.milling.payment.MillPaymentScreen
@@ -59,6 +61,14 @@ fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
     composable(DashboardScreen.MillWorkers.route) {
         MillWorkerScreen(navController = navController)
     }
+
+    composable(DashboardScreen.DailyExpense.route) {
+        ExpenseDeclarationScreen(navController = navController)
+    }
+
+    composable(DashboardScreen.ExpenseDeclaration.route) {
+        ExpensesListScreen(navController = navController)
+    }
 }
 
 sealed class DashboardScreen(val route: String) {
@@ -73,4 +83,6 @@ sealed class DashboardScreen(val route: String) {
     data object MillPayroll: DashboardScreen(route = "mill_payroll")
     data object MillCustomers: DashboardScreen(route = "mill_customers")
     data object MillWorkersLoan: DashboardScreen(route = "mill_workers_loan")
+    data object ExpenseDeclaration: DashboardScreen(route = "mill_expense_declaration")
+    data object DailyExpense: DashboardScreen(route = "mill_daily_expense")
 }

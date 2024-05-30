@@ -25,7 +25,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,10 +52,10 @@ fun MillAttendanceScreen(
                 navController.popBackStack()
             },
             onClickPresent = {
-
+                viewModel.tagAsPresent(it)
             },
             onClickAbsent = {
-
+                viewModel.tagAsAbsent(it)
             }
         ),
         uiState = uiState
@@ -117,9 +116,9 @@ private fun MillAttendanceContent(
                     ItemWorker(
                         fullName = worker.fullName.orEmpty(),
                         alias = worker.userName.orEmpty(),
-                        isPresent = false,
-                        onClickPresent = { /*TODO*/ },
-                        onClickAbsent = { /*TODO*/ }
+                        isPresent = worker.isPresent,
+                        onClickPresent = { callback.onClickPresent(worker.workerID.orEmpty()) },
+                        onClickAbsent = { callback.onClickAbsent(worker.workerID.orEmpty()) }
                     )
                 }
             }

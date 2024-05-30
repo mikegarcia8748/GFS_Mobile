@@ -54,6 +54,10 @@
     <string name="label_customer_alias">Customer Alias</string>
     <string name="label_add_customer">Add Customer</string>
     <string name="label_employees">Employees</string>
+    <string name="label_expense_declaration">Expense Declaration</string>
+    <string name="label_description">Description</string>
+    <string name="label_amount">Amount</string>
+    <string name="label_daily_expenses">Daily Expenses</string>
 
 <!--    Sentences-->
     <string name="sentence_amount_to_pay">Amount to pay</string>
