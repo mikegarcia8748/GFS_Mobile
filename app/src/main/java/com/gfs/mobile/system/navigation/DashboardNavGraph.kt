@@ -62,11 +62,11 @@ fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
         MillWorkerScreen(navController = navController)
     }
 
-    composable(DashboardScreen.DailyExpense.route) {
+    composable(DashboardScreen.ExpenseDeclaration.route) {
         ExpenseDeclarationScreen(navController = navController)
     }
 
-    composable(DashboardScreen.ExpenseDeclaration.route) {
+    composable(DashboardScreen.DailyExpense.route) {
         ExpensesListScreen(navController = navController)
     }
 }

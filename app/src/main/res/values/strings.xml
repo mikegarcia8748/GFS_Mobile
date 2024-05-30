@@ -66,4 +66,5 @@
     <string name="sentence_proceed_to_payment">Proceed to Payment</string>
     <string name="sentence_search_customer">Search Customer</string>
     <string name="sentence_no_payroll_records_found">No Payroll Records Found.</string>
+    <string name="sentence_please_provide_expense_details">Please provide the expense details</string>
 </resources>
