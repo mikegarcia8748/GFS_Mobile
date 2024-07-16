@@ -8,4 +8,5 @@ import androidx.navigation.NavHostController
 fun ExpensesListScreen(
     navController: NavHostController
 ) {
+
 }

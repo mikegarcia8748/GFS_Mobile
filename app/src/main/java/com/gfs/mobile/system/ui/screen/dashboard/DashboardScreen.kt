@@ -47,7 +47,7 @@ fun DashboardScreen(
                 val route = when (it) {
                     0 -> { DashboardScreen.MillBilling.route }
                     1 -> { DashboardScreen.MillInventory.route }
-                    2-> { DashboardScreen.MillWorkers.route }
+                    2 -> { DashboardScreen.MillWorkers.route }
                     3 -> { DashboardScreen.MillAttendance.route }
                     4 -> { DashboardScreen.MillPayroll.route }
                     5 -> { DashboardScreen.MillWorkersLoan.route }
@@ -166,7 +166,7 @@ private fun DashboardButton(
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen.view_padding36)),
                 painter = icon,
-                contentDescription = null
+                contentDescription = label
             )
 
             Text(

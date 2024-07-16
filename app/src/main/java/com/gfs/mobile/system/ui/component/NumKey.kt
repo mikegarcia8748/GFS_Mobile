@@ -39,16 +39,6 @@ fun NumKey(
         Box(modifier = Modifier) {
             content()
         }
-//        if (!backSpace) {
-
-//        } else {
-//            Icon(
-//                modifier = Modifier
-//                    .padding(vertical = dimensionResource(id = R.dimen.view_padding8)),
-//                painter = painterResource(id = R.drawable.ic_backspace),
-//                contentDescription = null
-//            )
-//        }
     }
 }
 

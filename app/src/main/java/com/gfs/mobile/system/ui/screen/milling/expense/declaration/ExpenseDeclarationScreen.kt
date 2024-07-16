@@ -94,7 +94,7 @@ private fun ExpenseDeclarationContent(
                 keyboardType = KeyboardType.Number,
                 enabled = false,
                 onValueChanged = {
-
+                    callback.onEnterAmount(it)
                 }
             )
 
