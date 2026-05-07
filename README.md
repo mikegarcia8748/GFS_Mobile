@@ -9,10 +9,19 @@ GFS Mobile is an application intended for Family Farm Business management, inclu
 - **Rice Deposit:** Tracking and management of rice deposits.
 - **Truck Servicing:** Logistics management, primarily for picking up customer's rice and deliveries.
 
+## Architecture & Best Practices
+- **Multi-Module Architecture:** The project follows a modularized structure to improve build times, maintainability, and scalability.
+- **Clean Architecture:** Each module is structured into layers (Data, Domain, and UI) to ensure separation of concerns.
+    - **Domain Layer:** Contains business logic via **UseCases**.
+    - **Data Layer:** Handles data sourcing from Room, DataStore, and Firebase.
+    - **UI Layer:** Implements **MVVM** using Jetpack Compose.
+- **Testing Strategy:**
+    - **Unit Testing:** Comprehensive testing for UseCases, ViewModels, and Repositories.
+    - **UI Testing:** Automated testing for Compose components and navigation flows.
+
 ## Tech Stack & Libraries
 - **Language:** Kotlin
 - **UI Framework:** Jetpack Compose with Material Design 3
-- **Architecture:** MVVM (Model-View-ViewModel)
 - **Dependency Injection:** Hilt (Dagger)
 - **Local Database:** Room Persistence Library
 - **Local Storage:** Encrypted Jetpack DataStore (for secure preferences)
