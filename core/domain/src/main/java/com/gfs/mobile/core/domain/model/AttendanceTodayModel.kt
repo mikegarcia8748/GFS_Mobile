@@ -1,0 +1,18 @@
+package com.gfs.mobile.core.domain.model
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import androidx.annotation.Keep
+
+@Keep
+@Serializable
+data class AttendanceTodayModel(
+    @SerialName("fullName")
+    val fullName: String?,
+    @SerialName("isPresent")
+    val isPresent: Boolean?,
+    @SerialName("userName")
+    val userName: String?,
+    @SerialName("workerID")
+    val workerID: String?
+)

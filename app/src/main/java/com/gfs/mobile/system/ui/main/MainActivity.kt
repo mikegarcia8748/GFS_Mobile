@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.navigation.compose.rememberNavController
-import com.gfs.mobile.system.navigation.AuthScreen
+import com.gfs.mobile.core.navigation.AuthScreen
 import com.gfs.mobile.system.navigation.RootNavGraph
-import com.gfs.mobile.system.ui.theme.GFSMaterialTheme
+import com.gfs.mobile.core.ui.theme.GFSMaterialTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -32,6 +32,9 @@ datastore-version = "1.0.0"
 kotlinJsonSerialization-version = "1.9.23"
 lottie-version = "6.4.0"
 shimmer-version = "1.2.0"
+coroutines-version = "1.7.3"
+firebase-bom-version = "32.8.1"
+google-services-version = "4.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx-version" }
@@ -82,11 +85,20 @@ datastore = { group = "io.github.osipxd", name = "security-crypto-datastore-pref
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-version" }
 
 shimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "shimmer-version" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines-version" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines-version" }
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines-version" }
+
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom-version" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp-version" }
+androidLibrary = { id = "com.android.library", version.ref = "agp-version" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-version" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
 jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jvm-version" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-kapt-version" }
 kotlinJsonSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinJsonSerialization-version" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services-version" }

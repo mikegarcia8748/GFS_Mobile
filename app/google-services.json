@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356778031707",
+    "project_id": "garcia-farm-service",
+    "storage_bucket": "garcia-farm-service.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356778031707:android:76c88e9aa9f4eaf75c5d7e",
+        "android_client_info": {
+          "package_name": "com.gfs.mobile.system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn4TjsyihOs90Khfm1If9eT5DfukR1VeQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

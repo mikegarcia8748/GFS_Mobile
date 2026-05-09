@@ -21,4 +21,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "GFS_Mobile"
 include(":app")
- 
+include(":core:ui")
+include(":core:navigation")
+include(":core:domain")
+include(":core:data")
+include(":feature:auth")
+include(":feature:ricemill")
+include(":feature:dashboard")

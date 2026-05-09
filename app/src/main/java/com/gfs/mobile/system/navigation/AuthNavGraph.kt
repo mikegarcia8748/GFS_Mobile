@@ -4,7 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.gfs.mobile.system.ui.screen.auth.AuthenticationScreen
+import com.gfs.mobile.feature.auth.ui.screen.auth.AuthenticationScreen
+import com.gfs.mobile.core.navigation.AuthScreen
+import com.gfs.mobile.core.navigation.Graph
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController, startDestination: String) {
     navigation(
@@ -18,6 +20,4 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, startDestinat
     }
 }
 
-sealed class AuthScreen(val route: String) {
-    data object EnterPIN: AuthScreen(route = "enter_pin")
-}
+

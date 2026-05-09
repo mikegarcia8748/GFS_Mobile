@@ -3,18 +3,19 @@ package com.gfs.mobile.system.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.gfs.mobile.system.ui.screen.dashboard.DashboardScreen
-import com.gfs.mobile.system.ui.screen.milling.attendance.MillAttendanceScreen
-import com.gfs.mobile.system.ui.screen.milling.billing.MillBillingScreen
-import com.gfs.mobile.system.ui.screen.milling.customer.MillCustomerScreen
-import com.gfs.mobile.system.ui.screen.milling.expense.declaration.ExpenseDeclarationScreen
-import com.gfs.mobile.system.ui.screen.milling.expense.list.ExpensesListScreen
-import com.gfs.mobile.system.ui.screen.milling.inventory.MillInventoryScreen
-import com.gfs.mobile.system.ui.screen.milling.loan.MillWorkerLoanScreen
-import com.gfs.mobile.system.ui.screen.milling.payment.MillPaymentScreen
-import com.gfs.mobile.system.ui.screen.milling.payroll.MillWorkerPayrollScreen
-import com.gfs.mobile.system.ui.screen.milling.worker.MillWorkerScreen
-import com.gfs.mobile.system.ui.screen.settings.SettingsScreen
+import com.gfs.mobile.core.navigation.DashboardScreen
+import com.gfs.mobile.feature.dashboard.ui.screen.dashboard.DashboardScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.attendance.MillAttendanceScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.billing.MillBillingScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.customer.MillCustomerScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.expense.declaration.ExpenseDeclarationScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.expense.list.ExpensesListScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.inventory.MillInventoryScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.loan.MillWorkerLoanScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.payment.MillPaymentScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.payroll.MillWorkerPayrollScreen
+import com.gfs.mobile.feature.ricemill.ui.screen.milling.worker.MillWorkerScreen
+import com.gfs.mobile.feature.dashboard.ui.screen.settings.SettingsScreen
 
 fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
 
@@ -71,18 +72,4 @@ fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
     }
 }
 
-sealed class DashboardScreen(val route: String) {
 
-    data object Dashboard: DashboardScreen(route = "dashboard")
-    data object Settings: DashboardScreen(route = "settings")
-    data object MillBilling: DashboardScreen(route = "mill_billing")
-    data object MillBillingPayment: DashboardScreen(route = "mill_billing_payment")
-    data object MillAttendance: DashboardScreen(route = "mill_worker_attendance")
-    data object MillWorkers: DashboardScreen(route = "mill_workers")
-    data object MillInventory: DashboardScreen(route = "mill_inventory")
-    data object MillPayroll: DashboardScreen(route = "mill_payroll")
-    data object MillCustomers: DashboardScreen(route = "mill_customers")
-    data object MillWorkersLoan: DashboardScreen(route = "mill_workers_loan")
-    data object ExpenseDeclaration: DashboardScreen(route = "mill_expense_declaration")
-    data object DailyExpense: DashboardScreen(route = "mill_daily_expense")
-}

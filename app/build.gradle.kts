@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kapt)
     alias(libs.plugins.kotlinJsonSerialization)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -78,6 +79,14 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core:ui"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:data"))
+    implementation(project(":feature:auth"))
+    implementation(project(":feature:ricemill"))
+    implementation(project(":feature:dashboard"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
