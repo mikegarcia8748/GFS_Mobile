@@ -26,6 +26,7 @@ livedata-version = "2.7.0"
 kotlin-serialization-version = "1.5.1"
 navigationCompose-version = "2.7.7"
 hilt-navigation-version = "1.2.0"
+hilt-work-version = "1.2.0"
 kotlin-kapt-version = "1.5.30"
 uiTextGoogleFonts = "1.6.6"
 datastore-version = "1.0.0"
@@ -35,6 +36,7 @@ shimmer-version = "1.2.0"
 coroutines-version = "1.7.3"
 firebase-bom-version = "32.8.1"
 google-services-version = "4.4.1"
+work-version = "2.9.0"
 kotest-version = "6.1.11"
 
 [libraries]
@@ -57,12 +59,14 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-version" }
 
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room-runtime-version" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-runtime-version" }
 androidx-sqlite-ktx = { group = "androidx.sqlite", name = "sqlite-ktx", version.ref = "sqlite-ktx-version" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-compiler-version" }
 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-version" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-version" }
 hiltcompiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt-navigation-version" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-work-version" }
 
 retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit-version" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson-version" }
@@ -89,6 +93,7 @@ shimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines-version" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines-version" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines-version" }
+androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-version" }
 
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom-version" }

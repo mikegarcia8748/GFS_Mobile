@@ -87,6 +87,7 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:ricemill"))
     implementation(project(":feature:dashboard"))
+    implementation(project(":feature:payroll"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

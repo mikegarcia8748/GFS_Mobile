@@ -45,6 +45,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.sqlite.ktx)
     kapt(libs.room.compiler)
 
@@ -58,6 +59,7 @@ dependencies {
     
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.hilt.work)
     
     implementation(libs.timber.logging)
 

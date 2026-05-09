@@ -5,7 +5,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.gfs.mobile.core.navigation.DashboardScreen
 import com.gfs.mobile.feature.dashboard.ui.screen.dashboard.DashboardScreen
-import com.gfs.mobile.feature.ricemill.ui.screen.milling.attendance.MillAttendanceScreen
 import com.gfs.mobile.feature.ricemill.ui.screen.milling.billing.MillBillingScreen
 import com.gfs.mobile.feature.ricemill.ui.screen.milling.customer.MillCustomerScreen
 import com.gfs.mobile.feature.ricemill.ui.screen.milling.expense.declaration.ExpenseDeclarationScreen
@@ -16,6 +15,7 @@ import com.gfs.mobile.feature.ricemill.ui.screen.milling.payment.MillPaymentScre
 import com.gfs.mobile.feature.ricemill.ui.screen.milling.payroll.MillWorkerPayrollScreen
 import com.gfs.mobile.feature.ricemill.ui.screen.milling.worker.MillWorkerScreen
 import com.gfs.mobile.feature.dashboard.ui.screen.settings.SettingsScreen
+import com.gfs.mobile.feature.payroll.ui.screen.attendance.AttendanceScreen
 
 fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
 
@@ -32,15 +32,11 @@ fun NavGraphBuilder.dashboardNavGraph(navController: NavHostController) {
     }
 
     composable(DashboardScreen.MillAttendance.route) {
-        MillAttendanceScreen(navController = navController)
+        AttendanceScreen(navController = navController)
     }
 
     composable(DashboardScreen.MillInventory.route) {
         MillInventoryScreen(navController = navController)
-    }
-
-    composable(DashboardScreen.MillPayroll.route) {
-        MillWorkerPayrollScreen(navController = navController)
     }
 
     composable(DashboardScreen.MillPayroll.route) {

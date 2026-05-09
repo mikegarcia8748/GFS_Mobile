@@ -11,5 +11,9 @@ data class CreateAttendanceParams(
     @SerialName("entryBy")
     val entryBy: String?,
     @SerialName("workerID")
-    val workerID: String?
+    val workerID: String?,
+    @SerialName("businessLineID")
+    val businessLineID: String?,
+    @SerialName("status")
+    val status: String?
 )
