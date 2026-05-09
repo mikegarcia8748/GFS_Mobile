@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml:2:13-83
+INJECTED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml:2:13-83
+	package
+		INJECTED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml
+	xmlns:android
+		ADDED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml:2:23-81
+uses-sdk
+INJECTED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml reason: use-sdk injection requested
+INJECTED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml
+INJECTED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml
+	android:targetSdkVersion
+		INJECTED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml
+	android:minSdkVersion
+		INJECTED from D:\Projects\AndroidStudioProjects\GFS_Mobile\feature\payroll\build\intermediates\tmp\ProcessLibraryManifest\dev\debug\tempAndroidManifest13658067704324005557.xml
