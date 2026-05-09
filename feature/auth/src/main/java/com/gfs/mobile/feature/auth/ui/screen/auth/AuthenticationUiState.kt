@@ -14,6 +14,9 @@ data class AuthenticationUiState(
     val fourthDigit: Boolean = false,
     val fifthDigit: Boolean = false,
     val sixthDigit: Boolean = false,
+    val email: String = "",
+    val pass: String = "",
+    val isEmailLogin: Boolean = false,
     val errorMessage: String? = null,
     val hasAuthenticated: Boolean = false,
     val showLoadingDialog: Boolean = false

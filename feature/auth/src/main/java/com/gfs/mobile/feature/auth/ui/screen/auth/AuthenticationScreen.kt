@@ -1,6 +1,7 @@
 package com.gfs.mobile.feature.auth.ui.screen.auth
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandVertically
@@ -14,10 +15,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,6 +33,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
@@ -48,6 +53,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -78,9 +84,13 @@ fun AuthenticationScreen(
             onClickBackSpace = { viewModel.setBackSpaceAction() },
             onClickSelectAccount = { viewModel.getAuthorizeUsers() },
             onCancelAccountSelection = { viewModel.accountSelectionCanceled() },
-            onSelectAccount = { viewModel.setActiveAccount(it) }
+            onSelectAccount = { viewModel.setActiveAccount(it) },
+            onEmailChanged = { viewModel.onEmailChanged(it) },
+            onPasswordChanged = { viewModel.onPasswordChanged(it) },
+            onClickLoginWithEmail = { viewModel.authenticateWithEmail() }
         ),
-        uiState = uiState
+        uiState = uiState,
+        onToggleMode = { viewModel.toggleLoginMode() }
     )
 
     LaunchedEffect(key1 = Unit) {
@@ -116,16 +126,16 @@ fun AuthenticationScreen(
 @Composable
 private fun AuthenticationContent(
     callback: AuthenticationCallback,
-    uiState: AuthenticationUiState
+    uiState: AuthenticationUiState,
+    onToggleMode: () -> Unit
 ) {
 
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .padding(bottom = paddingValues.calculateBottomPadding())
+                .fillMaxSize()
+                .padding(paddingValues)
                 .padding(horizontal = dimensionResource(id = R.dimen.view_padding16)),
-            verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -141,7 +151,7 @@ private fun AuthenticationContent(
                 )
             }
 
-            Spacer(modifier = Modifier.weight(.3f))
+            Spacer(modifier = Modifier.weight(.2f))
 
             Image(
                 modifier = Modifier,
@@ -150,34 +160,103 @@ private fun AuthenticationContent(
 
             Spacer(modifier = Modifier.weight(.1f))
 
-            AccountChange(
-                userName = uiState.userName.orEmpty(),
-                onClickSelectAccount = {
-                    callback.onClickSelectAccount()
+            Crossfade(targetState = uiState.isEmailLogin, label = "LoginMode") { isEmail ->
+                if (isEmail) {
+                    EmailLoginContent(
+                        email = uiState.email,
+                        pass = uiState.pass,
+                        onEmailChanged = callback.onEmailChanged,
+                        onPassChanged = callback.onPasswordChanged,
+                        onLoginClick = callback.onClickLoginWithEmail
+                    )
+                } else {
+                    MpinLoginContent(uiState, callback)
                 }
-            )
+            }
 
             Spacer(modifier = Modifier.weight(.1f))
 
-            InputPreview(
-                inputLength = uiState.userPIN.length
-            )
+            TextButton(onClick = onToggleMode) {
+                Text(
+                    text = if (uiState.isEmailLogin) "Switch to MPIN Login" else "Switch to Admin Login",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
 
-            Spacer(modifier = Modifier.weight(.05f))
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
 
-            NumPad(
-                modifier = Modifier
-                    .weight(1f),
-                enabled = !uiState.hasSixDigit,
-                onNumKeyClick = {
-                    callback.onEnterPIN(it)
-                },
-                onClickBackSpace = {
-                    callback.onClickBackSpace()
-                }
-            )
+@Composable
+private fun MpinLoginContent(
+    uiState: AuthenticationUiState,
+    callback: AuthenticationCallback
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        AccountChange(
+            userName = uiState.userName.orEmpty(),
+            onClickSelectAccount = {
+                callback.onClickSelectAccount()
+            }
+        )
 
-            Spacer(modifier = Modifier.weight(.05f))
+        Spacer(modifier = Modifier.height(32.dp))
+
+        InputPreview(
+            inputLength = uiState.userPIN.length
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        NumPad(
+            modifier = Modifier.height(300.dp),
+            enabled = !uiState.hasSixDigit,
+            onNumKeyClick = {
+                callback.onEnterPIN(it)
+            },
+            onClickBackSpace = {
+                callback.onClickBackSpace()
+            }
+        )
+    }
+}
+
+@Composable
+private fun EmailLoginContent(
+    email: String,
+    pass: String,
+    onEmailChanged: (String) -> Unit,
+    onPassChanged: (String) -> Unit,
+    onLoginClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        OutlinedTextField(
+            value = email,
+            onValueChange = onEmailChanged,
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = pass,
+            onValueChange = onPassChanged,
+            label = { Text("Password") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation(),
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(
+            onClick = onLoginClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Login")
         }
     }
 }
@@ -333,7 +412,8 @@ private fun AuthenticationContentPreview() {
                 onCancelAccountSelection = { },
                 onSelectAccount = { }
             ),
-            uiState = AuthenticationUiState()
+            uiState = AuthenticationUiState(),
+            onToggleMode = {}
         )
     }
 }

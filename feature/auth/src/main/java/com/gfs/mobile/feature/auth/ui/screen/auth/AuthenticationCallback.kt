@@ -5,5 +5,8 @@ data class AuthenticationCallback(
     val onClickBackSpace: () -> Unit,
     val onClickSelectAccount: () -> Unit,
     val onCancelAccountSelection: () -> Unit,
-    val onSelectAccount: (value: String) -> Unit
+    val onSelectAccount: (value: String) -> Unit,
+    val onEmailChanged: (value: String) -> Unit = {},
+    val onPasswordChanged: (value: String) -> Unit = {},
+    val onClickLoginWithEmail: () -> Unit = {}
 )

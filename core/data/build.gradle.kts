@@ -65,4 +65,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.kotlinx.coroutines.play.services)
+
+    // Testing
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.kotest.assertions)
 }
