@@ -40,9 +40,6 @@ fun DashboardScreen(
             onClickInventory = {
                 navController.navigate(DashboardScreen.MillInventory.route)
             },
-            onClickEmployees = {
-                navController.navigate(DashboardScreen.MillWorkers.route)
-            },
             onClickAttendance = {
                 navController.navigate(DashboardScreen.MillAttendance.route)
             },
@@ -55,9 +52,6 @@ fun DashboardScreen(
             onClickCustomer = {
                 navController.navigate(DashboardScreen.MillCustomers.route)
             },
-            onClickLoan = {
-                navController.navigate(DashboardScreen.MillWorkersLoan.route)
-            }
         ),
         uiState = DashboardUiState()
     )
@@ -125,8 +119,8 @@ private fun DashboardContent(
                     .fillMaxWidth()
             ) {
 
-                val buttons = listOf(stringResource(id = R.string.label_employee), stringResource(id = R.string.label_attendance))
-                val icons = listOf(painterResource(id = R.drawable.ic_worker), painterResource(id = R.drawable.ic_attendance))
+                val buttons = listOf(stringResource(id = R.string.label_attendance), stringResource(id = R.string.label_payroll))
+                val icons = listOf(painterResource(id = R.drawable.ic_attendance), painterResource(id = R.drawable.ic_calculator))
 
                 repeat(2) {
                     DashboardButton(
@@ -136,39 +130,13 @@ private fun DashboardContent(
                         label = buttons[it],
                         onClick = {
                             if (it == 0)
-                                callback.onClickEmployees()
-                            else
                                 callback.onClickAttendance()
-                        }
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .padding(vertical = dimensionResource(id = R.dimen.view_padding8))
-                    .fillMaxWidth()
-            ) {
-
-                val buttons = listOf(stringResource(id = R.string.label_payroll), stringResource(id = R.string.label_loan))
-                val icons = listOf(painterResource(id = R.drawable.ic_calculator), painterResource(id = R.drawable.ic_loan))
-
-                repeat(2) {
-                    DashboardButton(
-                        modifier = Modifier
-                            .weight(1f),
-                        icon = icons[it],
-                        label = buttons[it],
-                        onClick = {
-                            if (it == 0)
-                                callback.onClickPayroll()
                             else
-                                callback.onClickLoan()
+                                callback.onClickPayroll()
                         }
                     )
                 }
             }
-
             Row(
                 modifier = Modifier
                     .padding(vertical = dimensionResource(id = R.dimen.view_padding8))
@@ -247,12 +215,10 @@ private fun DashboardContentPreview() {
             callback = DashboardCallback(
                 onClickMillBilling = { },
                 onClickInventory = { },
-                onClickEmployees = { },
                 onClickAttendance = { },
                 onClickPayroll = { },
                 onClickSettings = { },
                 onClickCustomer = { },
-                onClickLoan = { }
             ),
             uiState = DashboardUiState()
         )

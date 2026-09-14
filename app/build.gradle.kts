@@ -64,7 +64,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.text.google.fonts)
-    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -78,19 +77,8 @@ dependencies {
     kapt(libs.hiltcompiler)
     implementation(libs.androidx.hilt.navigation)
 
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.sqlite.ktx)
-    kapt(libs.room.compiler)
-
-    implementation(libs.retrofit2)
-    implementation(libs.converter.gson)
-    implementation(libs.interceptor)
-    implementation(libs.retrofit.adapter)
-    implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlin.serialization)
 
-    implementation(libs.timber.logging)
-    implementation(libs.androidx.livedata)
     implementation(libs.androidx.viewmodel)
 
     implementation(libs.datastore)
